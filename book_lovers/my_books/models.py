@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
-    author = models.ManytoManyField('Author')  # one or more authors per book
+    author = models.ManyToManyField('Author')  # one or more authors per book
     publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher
     date = models.DateField(blank=True, null=True)  # allows for unknown publishing date
 
@@ -33,4 +33,4 @@ class Publisher(models.Model):
 
 
 class User(AbstractUser):
-    favorites = models.ManytoMany('Books')
+    favorites = models.ManyToMany('Books')

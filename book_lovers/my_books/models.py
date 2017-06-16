@@ -14,7 +14,7 @@ class Book(models.Model):
 
 class Author(models.Model):
     # this class is being kept simple for this projects purposes. For other purposes, this field could be expanded to include other details
-    name = models.CharField(max_lenght=100)
+    name = models.CharField(max_length=100)
 
     def _str_(self):
         return self.name

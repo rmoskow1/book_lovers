@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, ListView
 
 from .models import Book
 
@@ -20,7 +20,6 @@ class BooksActionMixin:
     def form_valid(self, form):
         messages.info(self.request, self.success_msg)
         return super(BooksActionMixin, self).form_valid(form)
-
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book

@@ -33,4 +33,4 @@ class Publisher(models.Model):
 
 
 class User(AbstractUser):
-    favorites = models.ManyToManyField('Books')
+    favorites = models.ManyToManyField('Book')

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -10,8 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 #from book_lovers.forms import CreateForm
 
 from .models import Book
-
-
+#from .forms import BookCreateForm, BookUpdateForm
 class BooksActionMixin:
     fields = ['title', 'author', 'publisher', 'date', 'tags']
 
@@ -27,11 +25,13 @@ class BooksActionMixin:
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
     success_msg = "Book created!"
+    form_class = BookCreateForm
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
     success_msg = "Book updated!"
+    form_class = BookUpdateForm
 
 
 class BooksDetailView(DetailView):

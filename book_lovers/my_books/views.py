@@ -36,3 +36,6 @@ class BooksDetailView(DetailView):
 
 class BooksListView(ListView):
     model = Book
+    context_object_name = 'Book'
+    def book_list():
+        return Book.objects.all()

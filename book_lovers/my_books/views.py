@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
+from django.urls import reverse
 
 from .models import Book
 
@@ -37,5 +38,5 @@ class BooksDetailView(DetailView):
 class BooksListView(ListView):
     model = Book
     context_object_name = 'Book'
-    def book_list():
+    def book_list(self):
         return Book.objects.all()

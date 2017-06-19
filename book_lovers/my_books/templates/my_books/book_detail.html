@@ -6,4 +6,6 @@
 <p>Author: {{ object.author }}</p>
 <p>Publisher: {{ object.publisher }}</p>
 <p>Date: {{ object.date }}</p>
+
+<a href="{% url 'books:list' %}">Book List</a>
 {% endblock %}

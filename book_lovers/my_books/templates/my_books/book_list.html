@@ -6,7 +6,9 @@
 {%if object_list%}
     <ul>
         {% for book in object_list %}
-            <li>{{ book.title }}</li>
+            <li>
+            <a href = "{% url 'books:detail' book.pk %}">{{ book.title }} </a>
+            </li>
         {% endfor %}
     </ul>
   {%else%}

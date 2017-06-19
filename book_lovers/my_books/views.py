@@ -6,12 +6,14 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
 from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+#from book_lovers.forms import CreateForm
 
 from .models import Book
 
 
 class BooksActionMixin:
-    fields = ['title', 'author', 'publisher', 'date']
+    fields = ['title', 'author', 'publisher', 'date', 'tags']
 
     @property
     def success_msg(self):
@@ -38,5 +40,11 @@ class BooksDetailView(DetailView):
 class BooksListView(ListView):
     model = Book
     context_object_name = 'Book'
+
     def book_list(self):
         return Book.objects.all()
+
+    # def let_us_create(request):
+    #     if request.method == 'GET':
+    #         form = CreateForm(request.GET)
+    #         return HttpResponseRedirect('books:create')

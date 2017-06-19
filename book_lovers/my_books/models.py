@@ -10,7 +10,7 @@ class Book(models.Model):
     #instead of changing the user model, do this. Books can access the users who have favorited them, by Book.users_who_favorite. And Users can access all of the books they have favorited, by user.fav_books
     users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = 'fav_books')
     
-    tags = models.ManyToManyField('Tag',related_name = 'tagged_books', blank = True,null = True)
+    tags = models.ManyToManyField('Tag',related_name = 'tagged_books', blank = True)
     def __str__(self):
         return self.title
 

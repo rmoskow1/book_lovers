@@ -24,15 +24,16 @@ class BooksActionMixin:
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
-    success_msg = "Book created!"
+    #success_msg = "Book created!"
     template_name_suffix = '_update_form'
+  #  success_url = reverse('\books\\')
 
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
     success_msg = "Book updated!"
-    form_class = BookUpdateForm
+
 
 
 class BooksDetailView(DetailView):

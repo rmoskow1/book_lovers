@@ -25,7 +25,8 @@ class BooksActionMixin:
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
     success_msg = "Book created!"
-    form_class = BookCreateForm
+    template_name_suffix = '_update_form'
+
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
@@ -43,8 +44,3 @@ class BooksListView(ListView):
 
     def book_list(self):
         return Book.objects.all()
-
-    # def let_us_create(request):
-    #     if request.method == 'GET':
-    #         form = CreateForm(request.GET)
-    #         return HttpResponseRedirect('books:create')

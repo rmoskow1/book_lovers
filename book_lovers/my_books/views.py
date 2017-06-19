@@ -24,15 +24,17 @@ class BooksActionMixin:
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
-    #success_msg = "Book created!"
     template_name_suffix = '_update_form'
-  #  success_url = reverse('\books\\')
+    def get_success_url(self):
+        return reverse('books:list')
 
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
-    success_msg = "Book updated!"
+ 
+    def get_success_url(self):
+        return reverse('books:detail',kwargs={'pk':self.object.pk})
 
 
 

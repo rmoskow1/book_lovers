@@ -33,3 +33,6 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
 
 class BooksDetailView(DetailView):
     model = Book
+
+class BooksListView(ListView):
+    model = Book

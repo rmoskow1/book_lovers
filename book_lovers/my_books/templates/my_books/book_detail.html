@@ -3,9 +3,12 @@
 
 {% block content %}
 <h1>Title: {{ object.title }}</h1>
-<p>Author: {{ object.author }}</p>
+<p>Author(s): {% for author in object.author.all %}
+             {{ author }}{% if not forloop.last %},{% endif %}
+          {% endfor %}</p>
 <p>Publisher: {{ object.publisher }}</p>
 <p>Date: {{ object.date }}</p>
 
+<a href="{% url 'books:delete' book.pk %}">Delete this book</a>
 <a href="{% url 'books:list' %}">Book List</a>
 {% endblock %}

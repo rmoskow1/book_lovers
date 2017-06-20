@@ -1,22 +1,19 @@
-
-
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView, UpdateView, ListView
+from django.views.generic import CreateView, DetailView, UpdateView, ListView, DeleteView
 from django.urls import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
 
 from .models import Book
-<<<<<<< HEAD
 
 
-class BooksActionMixin(object):
-=======
+
+#class BooksActionMixin(object):
+
 #from .forms import BookCreateForm, BookUpdateForm
-class BooksActionMixin:
->>>>>>> b73db299ea7489a7ffca99e76fda0893413624e2
+class BooksActionMixin(object):
     fields = ['title', 'author', 'publisher', 'date', 'tags']
 
     @property
@@ -30,23 +27,22 @@ class BooksActionMixin:
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
-<<<<<<< HEAD
-    success_msg = "Book created!"
-    template_name_suffix = '_update_form'
 
-    def get_success_url(self):
-        return redirect('books:list')
-=======
-    template_name_suffix = '_update_form'
+    # success_msg = "Book created!"
+    # template_name_suffix = '_update_form'
+    #
+    # def get_success_url(self):
+    #     return redirect('books:list')
+
+
     def get_success_url(self):
         return reverse('books:list')
-
->>>>>>> b73db299ea7489a7ffca99e76fda0893413624e2
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
- 
+
+    template_name_suffix = '_update_form'
     def get_success_url(self):
         return reverse('books:detail',kwargs={'pk':self.object.pk})
 
@@ -59,5 +55,16 @@ class BooksListView(ListView):
     model = Book
     context_object_name = 'Book'
 
-    def book_list(self):
-        return Book.objects.all()
+    # def search(request):
+    #     if request.method == 'GET':
+    #         q = request.GET['q']
+    #         books = Book.objects.filter(title__icontains=q)
+    #         context['books'] = books
+
+
+class BooksDeleteView(DeleteView):
+    model = Book
+    template_name_suffix = '_confirm_delete'
+
+    def get_success_url(self):
+        return reverse('books:list')

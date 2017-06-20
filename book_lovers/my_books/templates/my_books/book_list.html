@@ -5,11 +5,20 @@
 <a href="{% url 'books:create' %}">Add a Book</a>
 
 <h1>Book List</h1>
+
+<form type="get" action="." style="margin: 0">
+    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
+    <button id="search_submit" type="submit" >Submit</button>
+</form>
+
+
 {%if object_list%}
     <ul>
         {% for book in object_list %}
             <li>
-            <a href = "{% url 'books:detail' book.pk %}">{{ book.title }} </a>||||<a href="{% url 'books:update' book.pk %}"> Update</a>
+                <a href = "{% url 'books:detail' book.pk %}">{{ book.title }} </a>
+                ||||<a href="{% url 'books:update' book.pk %}"> Update </a>
+                ||||<a href="{% url 'books:delete' book.pk %}"> Delete</a>
             </li>
         {% endfor %}
     </ul>

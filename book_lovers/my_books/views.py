@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -10,9 +9,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 #from book_lovers.forms import CreateForm
 
 from .models import Book
+<<<<<<< HEAD
 
 
 class BooksActionMixin(object):
+=======
+#from .forms import BookCreateForm, BookUpdateForm
+class BooksActionMixin:
+>>>>>>> b73db299ea7489a7ffca99e76fda0893413624e2
     fields = ['title', 'author', 'publisher', 'date', 'tags']
 
     @property
@@ -26,16 +30,26 @@ class BooksActionMixin(object):
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
+<<<<<<< HEAD
     success_msg = "Book created!"
     template_name_suffix = '_update_form'
 
     def get_success_url(self):
         return redirect('books:list')
+=======
+    template_name_suffix = '_update_form'
+    def get_success_url(self):
+        return reverse('books:list')
+
+>>>>>>> b73db299ea7489a7ffca99e76fda0893413624e2
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
-    success_msg = "Book updated!"
+ 
+    def get_success_url(self):
+        return reverse('books:detail',kwargs={'pk':self.object.pk})
+
 
 
 class BooksDetailView(DetailView):

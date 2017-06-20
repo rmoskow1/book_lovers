@@ -12,7 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Book
 
 
-class BooksActionMixin:
+class BooksActionMixin(object):
     fields = ['title', 'author', 'publisher', 'date', 'tags']
 
     @property
@@ -27,7 +27,10 @@ class BooksActionMixin:
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
     success_msg = "Book created!"
-    templlate_name_suffix = '_update_form'
+    template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        return redirect('books:list')
 
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):

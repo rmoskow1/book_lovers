@@ -4,11 +4,11 @@
 {% block content %}
 <a href="{% url 'books:create' %}">Add a Book</a>
 {% if not user.is_authenticated %}
-    <a href="{% url 'account:login' %}" style="position: absolute; left: 100px;">Login</a>
+    <a href="{% url 'account:login' %}">Login</a>
 {% else %}
-    <a href="{% url 'account:logout' %}" style="position: absolute; left: 100px;">Logout</a>
+    <a href="{% url 'account:logout' %}">Logout</a>
 {% endif %}
-
+<br>
 {%if request.user.is_authenticated%}
 <a href = "{% url 'books:favorites' %}">My Favorites</a>
 {%endif%}

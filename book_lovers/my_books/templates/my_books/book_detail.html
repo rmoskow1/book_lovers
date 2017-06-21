@@ -8,6 +8,9 @@
           {% endfor %}</p>
 <p>Publisher: {{ object.publisher }}</p>
 <p>Date: {{ object.date }}</p>
+<p>Tag(s): {% for tag in object.tags.all %}
+             {{ tag }}{% if not forloop.last %},{% endif %}
+          {% endfor %}</p>
 
 <a href="{% url 'books:delete' book.pk %}">Delete this book</a>
 <a href="{% url 'books:list' %}">Book List</a>

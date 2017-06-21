@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
 
-from .models import Book
+from .models import Book, Author
 
 
 
@@ -68,3 +68,15 @@ class BooksDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('books:list')
+
+class AuthorsCreateView(CreateView):
+    fields = ['name']
+    model = Author
+
+    def get_success_url(self):
+        return reverse('books:create')
+
+    # def form_valid(self, form):
+    #     messages.info(self.request, self.success_msg)
+    #     return super(BooksActionMixin, self).form_valid(form)
+

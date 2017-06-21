@@ -3,6 +3,5 @@
             {{ form.as_table}}
         </table>
         {% csrf_token %}
-        <div style="position: fixed; top: 55px; left: 250px;"><a href="{% url 'books:author' %}">Add an Author</a></div>
         <input type="submit" value="Submit">
 </form>

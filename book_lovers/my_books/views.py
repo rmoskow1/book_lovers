@@ -8,9 +8,6 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 
 from .models import Book, Author
 from django.db.models import Q
-from .models import Book
-
-
 
 
 #class BooksActionMixin(object):
@@ -94,6 +91,5 @@ class AuthorsCreateView(CreateView):
     # def form_valid(self, form):
     #     messages.info(self.request, self.success_msg)
     #     return super(BooksActionMixin, self).form_valid(form)
-
 
 

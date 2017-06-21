@@ -97,7 +97,7 @@ class BooksListView(TitleSearchMixin,ListView):
     context_object_name = 'Book'
 
 
-<<<<<<< HEAD
+
 class FavoritesListView(BooksListView):
     def get_queryset(self):
         queryset = super(FavoritesListView, self).get_queryset()
@@ -107,10 +107,9 @@ class FavoritesListView(BooksListView):
 # No q is specified so we return queryset
         return queryset        
 
-class BooksDeleteView(DeleteView):
-=======
+
 class BooksDeleteView(LoginRequiredMixin, DeleteView):
->>>>>>> 46accbc031959ec953d063c454decd0d4150b4ee
+
     model = Book
     template_name_suffix = '_confirm_delete'
 

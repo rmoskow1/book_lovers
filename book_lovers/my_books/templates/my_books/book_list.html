@@ -5,12 +5,15 @@
 <a href="{% url 'books:create' %}">Add a Book</a>
 
 <h1>Book List</h1>
-
+{%comment%}
 <form type="get" action="." style="margin: 0">
     <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
     <button id="search_submit" type="submit" >Submit</button>
+</form>{%endcomment%}
+<form action="" method="GET">
+    <input type="text" name="q" />
+    <button type="submit">search</button>
 </form>
-
 
 {%if object_list%}
     <ul>

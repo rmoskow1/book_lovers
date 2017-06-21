@@ -11,7 +11,9 @@
 <p>Tag(s): {% for tag in object.tags.all %}
              {{ tag }}{% if not forloop.last %},{% endif %}
           {% endfor %}</p>
-
+<button> <a href = "{%url 'books:favorites_update' book.pk %}"> {%if object in User.fav_books.all%} Favorite{%else%}  Unfavorite{%endif%} </a></button>
+<br>
 <a href="{% url 'books:delete' book.pk %}">Delete this book</a>
+<br>
 <a href="{% url 'books:list' %}">Book List</a>
 {% endblock %}

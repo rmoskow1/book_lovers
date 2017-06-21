@@ -5,13 +5,11 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView, D
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
-<<<<<<< HEAD
 
 from .models import Book, Author
-=======
 from django.db.models import Q
 from .models import Book
->>>>>>> dc151ebd559a4d3af79445fc7fbd566628d3e21f
+
 
 
 
@@ -85,7 +83,6 @@ class BooksDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('books:list')
-<<<<<<< HEAD
 
 class AuthorsCreateView(CreateView):
     fields = ['name']
@@ -98,12 +95,5 @@ class AuthorsCreateView(CreateView):
     #     messages.info(self.request, self.success_msg)
     #     return super(BooksActionMixin, self).form_valid(form)
 
-=======
-    
-
-from django.db.models import Q
 
 
-
-  
->>>>>>> dc151ebd559a4d3af79445fc7fbd566628d3e21f

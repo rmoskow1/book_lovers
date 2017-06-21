@@ -3,6 +3,11 @@
 
 {% block content %}
 <a href="{% url 'books:create' %}">Add a Book</a>
+{% if not user.is_authenticated %}
+    <a href="{% url 'account:login' %}" style="position: absolute; left: 100px;">Login</a>
+{% else %}
+    <a href="{% url 'account:logout' %}" style="position: absolute; left: 100px;">Logout</a>
+{% endif %}
 
 <h1>Book List</h1>
 {%comment%}

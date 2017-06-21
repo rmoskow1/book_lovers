@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^delete/(?P<pk>\d+)/$', views.BooksDeleteView.as_view(), name='delete'),
     url(r'^author/$', views.AuthorsCreateView.as_view(), name='author'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='registration/login.html')),
+    #url(r'^logout/$', auth_views.LogoutView.as_view(template_name='registration/logout.html'))
+
 ]

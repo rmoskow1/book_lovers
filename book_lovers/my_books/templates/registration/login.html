@@ -3,11 +3,10 @@
 {% endif %}
 
 {% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+    {% if not user.is_authenticated %}
+    <p>Please login to view this page.</p>
     {% else %}
-    <p>Please login to see this page.</p>
+    <p>Please login.</p>
     {% endif %}
 {% endif %}
 
@@ -25,7 +24,7 @@
 </table>
 
 <input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
+<input type="hidden" name="next" value="{% url 'books:list' %}" />
 </form>
 
 {% comment %}

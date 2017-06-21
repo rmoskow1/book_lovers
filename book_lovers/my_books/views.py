@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, DeleteView
 from django.urls import reverse
+from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
 
@@ -56,6 +57,9 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
 
     template_name_suffix = '_update_form'
+
+    login_url = 'account:login'
+
     def get_success_url(self):
         return reverse('books:detail',kwargs={'pk':self.object.pk})
 
@@ -68,16 +72,12 @@ class BooksListView(TitleSearchMixin,ListView):
     model = Book
     context_object_name = 'Book'
 
-    # def search(request):
-    #     if request.method == 'GET':
-    #         q = request.GET['q']
-    #         books = Book.objects.filter(title__icontains=q)
-    #         context['books'] = books
 
-
-class BooksDeleteView(DeleteView):
+class BooksDeleteView(LoginRequiredMixin, DeleteView):
     model = Book
     template_name_suffix = '_confirm_delete'
+
+    login_url = 'account:login'
 
     def get_success_url(self):
         return reverse('books:list')

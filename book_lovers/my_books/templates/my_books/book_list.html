@@ -8,13 +8,10 @@
 {% else %}
     <a href="{% url 'account:logout' %}" style="position: absolute; left: 100px;">Logout</a>
 {% endif %}
-<<<<<<< HEAD
 
 {%if request.user.is_authenticated%}
 <a href = "{% url 'books:favorites' %}">My Favorites</a>
 {%endif%}
-=======
->>>>>>> origin/master
 
 <h1>Book List</h1>
 {%comment%}

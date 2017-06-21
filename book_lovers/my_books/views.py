@@ -5,7 +5,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView, D
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
-
+from django.db.models import Q
 from .models import Book
 
 
@@ -24,6 +24,18 @@ class BooksActionMixin(object):
     def form_valid(self, form):
         messages.info(self.request, self.success_msg)
         return super(BooksActionMixin, self).form_valid(form)
+    
+class TitleSearchMixin(object):
+    def get_queryset(self):
+# Fetch the queryset from the parent's get_queryset
+        queryset = super(TitleSearchMixin, self).get_queryset()
+# Get the q GET parameter
+        q = self.request.GET.get('q')
+        if q:
+# return a filtered queryset
+            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q))
+# No q is specified so we return queryset
+        return queryset
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
@@ -51,7 +63,7 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
 class BooksDetailView(DetailView):
     model = Book
 
-class BooksListView(ListView):
+class BooksListView(TitleSearchMixin,ListView):
     model = Book
     context_object_name = 'Book'
 
@@ -68,3 +80,10 @@ class BooksDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('books:list')
+    
+
+from django.db.models import Q
+
+
+
+  

@@ -13,6 +13,20 @@ from django.db.models import Q
 
 #class BooksActionMixin(object):
 
+#class Favorites_updateView(DetailView):
+    #model = Book
+def fav_updateView(self,request):
+    model = Book
+    status = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
+    
+    if self.object in request.User.fav_books.all():
+        request.User.fav_books.all().delete(self.object)
+    else:
+        request.User.fav_books.all().add(self.object)
+    return reverse('books:detail', kwargs = {'pk':self.object.pk})
+           
+
+
 #from .forms import BookCreateForm, BookUpdateForm
 class BooksActionMixin(object):
     fields = ['title', 'author', 'publisher', 'date', 'tags']
@@ -67,13 +81,35 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
 
 class BooksDetailView(DetailView):
     model = Book
+   # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
+   # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
+    def get_context(request):
+            model = Book
+            # Call the base implementation first to get a context
+            context = super(BooksDetailView, self).get_context_data()
+            # Add in a QuerySet of all the books
+            context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
+            return context   
+
 
 class BooksListView(TitleSearchMixin,ListView):
     model = Book
     context_object_name = 'Book'
 
 
+
+class FavoritesListView(BooksListView):
+    def get_queryset(self):
+        queryset = super(FavoritesListView, self).get_queryset()
+        if self.request.user.is_authenticated():
+        # return a filtered queryset
+            return self.request.user.fav_books.all()
+# No q is specified so we return queryset
+        return queryset        
+
+
 class BooksDeleteView(LoginRequiredMixin, DeleteView):
+
     model = Book
     template_name_suffix = '_confirm_delete'
 
@@ -92,5 +128,7 @@ class AuthorsCreateView(CreateView):
     # def form_valid(self, form):
     #     messages.info(self.request, self.success_msg)
     #     return super(BooksActionMixin, self).form_valid(form)
+    
+
 
 

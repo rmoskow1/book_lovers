@@ -9,6 +9,10 @@
     <a href="{% url 'account:logout' %}" style="position: absolute; left: 100px;">Logout</a>
 {% endif %}
 
+{%if request.user.is_authenticated%}
+<a href = "{% url 'books:favorites' %}">My Favorites</a>
+{%endif%}
+
 <h1>Book List</h1>
 {%comment%}
 <form type="get" action="." style="margin: 0">
@@ -19,6 +23,7 @@
     <input type="text" name="q" />
     <button type="submit">search</button>
 </form>
+
 
 {%if object_list%}
     <ul>

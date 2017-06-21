@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="book_lovers" />
     <orderEntry type="module" module-name="my_books" />
+    <orderEntry type="module" module-name="registration" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_FOLDERS">

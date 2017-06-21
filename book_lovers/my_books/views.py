@@ -45,6 +45,7 @@ class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     #
     # def get_success_url(self):
     #     return redirect('books:list')
+    login_url = 'account:login'
 
 
     def get_success_url(self):

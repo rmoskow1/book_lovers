@@ -1,2 +1,9 @@
 *__pycache__
 *db.sqlite3
+book_lovers/book_lovers/__pycache__/settings.cpython-36.pyc
+book_lovers/book_lovers/__pycache__/urls.cpython-36.pyc
+book_lovers/book_lovers/__pycache__/__init__.cpython-36.pyc
+book_lovers/my_books/__pycache__/admin.cpython-36.pyc
+book_lovers/my_books/__pycache__/views.cpython-36.pyc
+book_lovers/my_books/__pycache__/urls.cpython-36.pyc
+book_lovers/my_books/__pycache__/apps.cpython-36.pyc

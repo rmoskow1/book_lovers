@@ -66,6 +66,12 @@ class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     def get_success_url(self):
         return reverse('books:list')
 
+    # def get_context_data(self, *args, **kwargs):
+    #
+    #     import ipdb
+    #     ipdb.set_trace()
+    #     temp = super().get_context_data(*args, **kwargs)
+    #     return temp
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book

@@ -11,7 +11,17 @@
 <p>Tag(s): {% for tag in object.tags.all %}
              {{ tag }}{% if not forloop.last %},{% endif %}
           {% endfor %}</p>
-<button> <a href = "{%url 'books:favorites_update' book.pk %}"> {%if object in User.fav_books.all%} Favorite{%else%}  Unfavorite{%endif%} </a></button>
+{%comment%}
+<form type="get" action="." style="margin: 0">
+    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
+    <button id="search_submit" type="submit" >Submit</button>
+</form>{%endcomment%}
+<form action="books:favorites_update" method="POST">
+    <button type="submit" formethod = "POST">{%if object not in user.fav_books.all%} Favorite {%else%}  Unfavorite{%endif%}</button>
+</form>
+
+
+<button> <a href = "{%url 'books:favorites_update' %}"> {%if object not in user.fav_books.all%} Favorite {%else%}  Unfavorite{%endif%} </a></button>
 <br>
 <a href="{% url 'books:delete' book.pk %}">Delete this book</a>
 <br>

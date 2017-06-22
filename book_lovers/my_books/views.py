@@ -15,15 +15,22 @@ from django.db.models import Q
 
 #class Favorites_updateView(DetailView):
     #model = Book
-def fav_updateView(self,request):
+def fav_updateView(request):
     model = Book
-    status = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
     
-    if self.object in request.User.fav_books.all():
-        request.User.fav_books.all().delete(self.object)
+    if self.object in request.user.fav_books.all():
+        request.user.fav_books.all().remove(self.object)
     else:
-        request.User.fav_books.all().add(self.object)
-    return reverse('books:detail', kwargs = {'pk':self.object.pk})
+        request.user.fav_books.all().add(self.object)
+    return render(request,request.PATH)
+def fav_form(self,request):
+    model = Book
+    
+    if self.object in request.user.fav_books.all():
+        request.user.fav_books.all().remove(self.object)
+    else:
+        request.user.fav_books.all().add(self.object)  
+    return HttpResponseRedirect(reverse('books:detail'))
            
 
 

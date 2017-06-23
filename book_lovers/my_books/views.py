@@ -48,7 +48,7 @@ class TitleSearchMixin(object):
         q = self.request.GET.get('q')
         if q:
 # return a filtered queryset
-            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q))
+            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
 # No q is specified so we return queryset
         return queryset
 

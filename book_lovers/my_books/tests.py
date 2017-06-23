@@ -17,7 +17,10 @@ class BookTestCase(TestCase):
         #aa.save()
         #bb.save()
         aa.author.add(AuthList[0])
+        aa.author.add(AuthList[1])
         bb.author.add(AuthList[1])
+
+        self.assertEqual(aa.author.get(name='Fix It Felix Jr.'), felix)
 
     def test_create_book(self):
         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
@@ -25,4 +28,10 @@ class BookTestCase(TestCase):
 
         self.assertEqual(aa.date, None)
         self.assertEqual(bb.date, datetime.date(1955, 11, 12))
-        self.assertEqual(aa.author.all(), <)
+        self.assertEqual(len(Book.objects.all()), 2)
+
+
+    def test_delete_book(self):
+        Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
+        self.assertEqual(len(Book.objects.all()), 1)
+

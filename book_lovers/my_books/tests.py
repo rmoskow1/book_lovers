@@ -19,15 +19,24 @@ class BookTestCase(TestCase):
         #aa.save()
         #bb.save()
         aa.author.add(AuthList[0])
+        aa.author.add(AuthList[1])
         bb.author.add(AuthList[1])
+
+        self.assertEqual(aa.author.get(name='Fix It Felix Jr.'), felix)
 
     def test_create_book(self):
         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
 
         self.assertEqual(aa.date, None)
-        self.assertEqual(bb.date, datetime.date(1955, 11, 12))
-        self.assertEqual(aa.author.all(), <)
+        self.assertEqual(bb.date, datetime.date(1955, 11, 12))        
+        self.assertEqual(len(Book.objects.all()), 2)
+
+
+    def test_delete_book(self):
+        Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
+        self.assertEqual(len(Book.objects.all()), 1)
+
         
 class BookSearchMixinTest(TestCase):
     """based on dnmellen - tests mixin within a fake template"""
@@ -59,7 +68,3 @@ class BookSearchMixinTest(TestCase):
         newQuery =  self.View.get_queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
         assertEqual(self.get_queryset(), newQuery)
 
-
-
-        
-        

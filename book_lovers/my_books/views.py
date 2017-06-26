@@ -15,14 +15,15 @@ from django.db.models import Q
 
 #class Favorites_updateView(DetailView):
     #model = Book
-def fav_updateView(request):
+       
+def fav_updateView(self):
     model = Book
-    
-    if self.object in request.user.fav_books.all():
-        request.user.fav_books.all().remove(self.object)
+    book = Book.objects.all().filter(pk={'book.pk'})
+    if book in self.request.user.fav_books.all():
+        self.request.user.fav_books.remove(book)
     else:
-        request.user.fav_books.all().add(self.object)
-    return render(request,request.PATH)
+        self.request.user.fav_books.add(book)
+    return render(self.request,request.PATH)
 def fav_form(self,request):
     model = Book
     
@@ -47,15 +48,15 @@ class BooksActionMixin(object):
         messages.info(self.request, self.success_msg)
         return super(BooksActionMixin, self).form_valid(form)
     
-class TitleSearchMixin(object):
+class BookSearchMixin(object):
     def get_queryset(self):
 # Fetch the queryset from the parent's get_queryset
-        queryset = super(TitleSearchMixin, self).get_queryset()
+        queryset = super(BookSearchMixin, self).get_queryset()
 # Get the q GET parameter
         q = self.request.GET.get('q')
         if q:
 # return a filtered queryset
-            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q))
+            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
 # No q is specified so we return queryset
         return queryset
 
@@ -96,16 +97,16 @@ class BooksDetailView(DetailView):
     model = Book
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
-    def get_context(request):
-            model = Book
-            # Call the base implementation first to get a context
-            context = super(BooksDetailView, self).get_context_data()
-            # Add in a QuerySet of all the books
-            context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
-            return context   
+    #def get_context(request):
+            #model = Book
+            ## Call the base implementation first to get a context
+            #context = super(BooksDetailView, self).get_context_data()
+            ## Add in a QuerySet of all the books
+            #context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
+            #return context   
 
 
-class BooksListView(TitleSearchMixin,ListView):
+class BooksListView(BookSearchMixin,ListView):
     model = Book
     context_object_name = 'Book'
 

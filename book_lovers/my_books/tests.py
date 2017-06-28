@@ -14,66 +14,8 @@ import datetime, unittest
 from .factories import UserFactory, BookFactory, AuthorFactory
 import factory.fuzzy
 
-# Create your tests here.
-@unittest.skipIf(True == True, "not interested")
-class BookTestCase(TestCase):
 
 
-# Create your tests here.
-# class TestCaseMixin(TestCase):
-#     def setUp(self):
-#         grrr = Publisher.objects.create(name='How to Save a Life')
-#         felix = Author.objects.create(name='Fix It Felix Jr.')
-#         steve = Author.objects.create(name='Armless Steve')
-#         AuthList = [felix,steve]
-#         aa = Book.objects.create(title="Bob the Builder's Magical Mushrooms")
-#         bb = Book.objects.create(title="Factory Mishaps and Other Ways to Lose a Limb", publisher=grrr, date='1955-11-12')
-#         #aa.save()
-#         #bb.save()
-#         aa.author.add(AuthList[0])
-#         aa.author.add(AuthList[1])
-#         bb.author.add(AuthList[1])
-#         self.user = User.objects.create_user(
-#             username='pin', email='pin@pin.pin', password='pin-number')
-
-#
-    #
-    # felix = Author.objects.create(name='Fix It Felix Jr.')
-    # steve = Author.objects.create(name='Armless Steve')
-    # aa = Book.objects.create(id=1, title="Bob the Builder's Magical Mushrooms", author = (felix,))
-    # bb = Book.objects.create(id=2, title="Factory Mishaps and Other Ways to Lose a Limb", author = (steve,))
-    #
-    #
-
-   # return {books}
-
-    # class MockResponse:
-    #     def __init__(self, json_data, status_code):
-    #         self.json_data = json_data
-    #         self.status_code = status_code
-    #
-    #     def json(self):
-    #         return self.json_data
-    #
-    # if args[0] == 'http://someurl.com/test.json':
-    #     return MockResponse({"key1": "value1"}, 200)
-    # elif args[0] == 'http://someotherurl.com/anothertest.json':
-    #     return MockResponse({"key2": "value2"}, 200)
-
-# class BookCreateTest(TestCaseMixin):
-#
-#     def test_create_book(self):
-#         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
-#         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
-#
-#         self.assertEqual(aa.date, None)
-#         self.assertEqual(bb.date, datetime.date(1955, 11, 12))
-#         self.assertEqual(len(Book.objects.all()), 2)
-#
-#
-#     def test_delete_book(self):
-#         Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
-#         self.assertEqual(len(Book.objects.all()), 1)
 
 
 class FavoriteListViewTest(TestCase, FavoritesListView):
@@ -93,7 +35,7 @@ class FavoriteListViewTest(TestCase, FavoritesListView):
         global myBooks
         myBooks = [aa,bb]
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.get')
     def test_favorite(self, mockget):
         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
@@ -108,14 +50,14 @@ class FavoriteListViewTest(TestCase, FavoritesListView):
         myView.request = mockget.requests.get
         myView.request.user = user
 
-    def test_delete_book(self):
-        Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
-        self.assertEqual(len(Book.objects.all()), 1)
-#booksearch needs to test: 1.empty queryset 2.returning all values with the search in the author name 3.values with the search in the title 4.values with the exact search being the tag name 5. when a book is an answer for more than one category, it shouldn't appear twice 6. test that it's "recursive", that the page itself is searchable in the remaining content?
-#@unittest.skipIf(True == True, "not interested")     
         for book in myView.get_queryset():
             self.assertIn(book, user.fav_books.all())
         self.assertEqual(len(myView.get_queryset()), len(user.fav_books.all()))
+
+
+
+#booksearch needs to test: 1.empty queryset 2.returning all values with the search in the author name 3.values with the search in the title 4.values with the exact search being the tag name 5. when a book is an answer for more than one category, it shouldn't appear twice 6. test that it's "recursive", that the page itself is searchable in the remaining content?
+#@unittest.skipIf(True == True, "not interested")     
 
         
 
@@ -183,7 +125,7 @@ class BookSearchMixinTest(TestCase):
         #now testing variety among entry capitalization
         request = RequestFactory().get("/fake/path",{'q':"Best"})
         self.View.request= request
-        expected_books = [book1,book2,boook3]
+        expected_books = [book1,book2,book3]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books,actual_books) #confirm that even with different cases in the title, all the books will be found
         #now testing that a query with different cases will return the same queryset
@@ -203,17 +145,10 @@ class BookSearchMixinTest(TestCase):
             if book not in countList:
                 countList.append(book)
             else: #if book IS in countList
-                assertFalse(True) #the query was not distinct!
+                self.assertFalse(True) #the query was not distinct!
         
-    def test_emptySearch(self):
-        #if the request is empty, the search's queryset should be the same as the parents
-        self.request = None 
-        self.assertEqual(self.View.get_queryset(), self.get_queryset())
-    def test_successSearch(self):
-        #test - the resulting queryset should just be the view's queryset properly filtered
-        request = self.factory.get("/list/")
-        newQuery =  self.View.get_queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
-        self.assertEqual(self.get_queryset(), newQuery)
+    
+
         
         
    
@@ -225,7 +160,7 @@ class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
     '''tests that the FavoritesListView correctly displays a list of the user's favorite books (the user who made the request)'''
    
     def setup(self):
-        super(FavoritesListViewTest,self).setUp()
+        super(FavoritesListViewTest2,self).setUp()
         
     def test_listing(self):
         request = RequestFactory().get("fake/path")

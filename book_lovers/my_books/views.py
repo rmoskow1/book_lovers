@@ -5,7 +5,9 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView, D
 from django.urls import reverse
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
-#from book_lovers.forms import CreateFor
+
+#from book_lovers.forms import CreateForm
+
 from rest_framework.views import APIView  #a way to make normal views return API data
 from .serializers import BookSerializer
 from rest_framework.response import Response

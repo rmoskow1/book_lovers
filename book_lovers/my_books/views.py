@@ -16,6 +16,7 @@ from django.db.models import Q
 
 #class Favorites_updateView(DetailView):
     #model = Book
+
 # def fav_updateView(request):
 #     model = Book
 #
@@ -32,6 +33,7 @@ from django.db.models import Q
 #     else:
 #         request.user.fav_books.all().add(self.object)
 #     return HttpResponseRedirect(reverse('books:detail'))
+
            
 
 
@@ -51,7 +53,7 @@ class BooksActionMixin(object):
 class TitleSearchMixin(object):
     def get_queryset(self):
 # Fetch the queryset from the parent's get_queryset
-        queryset = super(TitleSearchMixin, self).get_queryset()
+        queryset = super(BookSearchMixin, self).get_queryset()
 # Get the q GET parameter
         q = self.request.GET.get('q')
         if q:
@@ -98,6 +100,7 @@ class BooksDetailView(DetailView, UpdateView):
     fields = ['users_who_favorite']
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
+
    #  def get_context_data(self, request):
    #          # Call the base implementation first to get a context
    #          context = super(self).get_context_data()
@@ -131,7 +134,7 @@ class BooksDetailView(DetailView, UpdateView):
 
 
 
-class BooksListView(TitleSearchMixin,ListView):
+class BooksListView(BookSearchMixin,ListView):
     model = Book
     context_object_name = 'Book'
 

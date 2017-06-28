@@ -25,6 +25,7 @@
     {{ form.as_table }}
     <input type="submit" value='{%if favorite %} Favorite {%else%}  Unfavorite{%endif%}'name="fav"/>
 </form>
+
 <br>
 <a href="{% url 'books:delete' book.pk %}">Delete this book</a>
 <br>

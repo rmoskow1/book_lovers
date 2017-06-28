@@ -2,6 +2,10 @@
 from __future__ import unicode_literals
 
 from django.test import TestCase, mock
+from django.views.generic import ListView
+from my_books.views import BookSearchMixin
+from django.test import TestCase, RequestFactory
+from django.db.models import Q
 from my_books.models import Book, Publisher, Author
 import datetime
 from django.contrib.auth.models import AnonymousUser, User
@@ -100,4 +104,35 @@ class FavoriteListViewTest(TestCase, FavoritesListView):
         for book in myView.get_queryset():
             self.assertIn(book, user.fav_books.all())
         self.assertEqual(len(myView.get_queryset()), len(user.fav_books.all()))
+
+        
+class BookSearchMixinTest(TestCase):
+    """based on dnmellen - tests mixin within a fake template"""
+    class DummyView(BookSearchMixin, ListView):
+        sacks = Author.objects.create(name = "Rabbi Lord Jonathan")
+        pub =  Publisher.objects.create(name = "Apress", city = "Cedarhurst")
+        book1 = Book.objects.create(title = "Harry Potato", publisher = pub )
+        book1.author.add(sacks)
+        elmo = Publisher.objects.create(name = "Elmo", address = "123")
+        auth2 = Author.objects.create(name = "Pubby")
+        book2 = Book.objects.create(title = "Booky", publisher = pub2)
+        book2.author.add(auth2)
+        book2.author.add(sacks)        
+        template_name = "best_darn_template_eva.html" #needed to be defined for any TemplateView
+
+    def setUp(self):
+        super(BookSearchMixinTest,self).setUp
+        self.View = self.DummyView()
+        self.factory = RequestFactory()
+        self.request
+    
+    def test_emptySearch(self):
+        #if the request is empty, the search's queryset should be the same as the parents
+        self.request = None 
+        self.assertEqual(self.View.get_queryset(), self.get_queryset())
+    def test_successSearch(self):
+        #test - the resulting queryset should just be the view's queryset properly filtered
+        request = self.factory.get("/list/")
+        newQuery =  self.View.get_queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
+        self.assertEqual(self.get_queryset(), newQuery)
 

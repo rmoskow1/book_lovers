@@ -50,7 +50,7 @@ class BooksActionMixin(object):
         messages.info(self.request, self.success_msg)
         return super(BooksActionMixin, self).form_valid(form)
     
-class TitleSearchMixin(object):
+class BookSearchMixin(object):
     def get_queryset(self):
 # Fetch the queryset from the parent's get_queryset
         queryset = super(BookSearchMixin, self).get_queryset()

@@ -162,7 +162,7 @@ class BookSearchMixinTest(TestCase):
             else: #if book IS in countList
                 self.assertFalse(True) #the query was not distinct!
         
-    
+
 
         
         

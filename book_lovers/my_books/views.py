@@ -5,26 +5,25 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView, D
 from django.urls import reverse
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+
 #from book_lovers.forms import CreateForm
-from rest_framework.views import APIView  #a way to make normal views return API data
-from .serializers import BookSerializer
-from rest_framework.response import Response
+
 from django.conf import settings
-
-
+from django.contrib.auth.models import User
 from .models import Book, Author
 from django.db.models import Q
 
 
 
+
        
-class BookListTemp(APIView):
-    def get(self,request):
-        books = Book.objects.all()
-        serializer = BookSerializer(books,many = True) #many tells it, don't just return 1! (it will automatically return one)
-        return Response(serializer.data)
-    def post(self): #don't actually put this functionality in the same view! Have a createview, etc. 
-        pass
+
+    #def get(self,request):
+        #books = Book.objects.all()
+        #serializer = BookSerializer(books,many = True) #many tells it, don't just return 1! (it will automatically return one)
+        #return Response(serializer.data)
+    #def post(self): #don't actually put this functionality in the same view! Have a createview, etc. 
+        #pass
 
 
 

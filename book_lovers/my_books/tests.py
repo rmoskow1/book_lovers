@@ -18,21 +18,6 @@ import factory.fuzzy
 
 
 
-# class BookCreateTest(TestCaseMixin):
-#
-#     def test_create_book(self):
-#         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
-#         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
-#
-#         self.assertEqual(aa.date, None)
-#         self.assertEqual(bb.date, datetime.date(1955, 11, 12))
-#         self.assertEqual(len(Book.objects.all()), 2)
-#
-#     def test_delete_book(self):
-#         Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
-#         self.assertEqual(len(Book.objects.all()), 1)
-
-
 class FavoriteListViewTest(TestCase, FavoritesListView):
     def setUp(self):
 

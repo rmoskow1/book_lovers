@@ -6,13 +6,11 @@ from django.urls import reverse
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
-<<<<<<< HEAD
 from rest_framework.views import APIView  #a way to make normal views return API data
 from .serializers import BookSerializer
 from rest_framework.response import Response
-=======
 from django.conf import settings
->>>>>>> origin/master
+
 
 from .models import Book, Author
 from django.db.models import Q

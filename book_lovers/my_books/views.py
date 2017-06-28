@@ -8,20 +8,16 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 
 #from book_lovers.forms import CreateForm
 
-from rest_framework.views import APIView  #a way to make normal views return API data
-from .serializers import BookSerializer
-from rest_framework.response import Response
 from django.conf import settings
+from django.contrib.auth.models import User
 from .models import Book, Author
 from django.db.models import Q
-from rest_framework import viewsets
+
 
 
 
        
-class BookListTemp(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
     #def get(self,request):
         #books = Book.objects.all()
         #serializer = BookSerializer(books,many = True) #many tells it, don't just return 1! (it will automatically return one)

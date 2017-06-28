@@ -36,8 +36,7 @@ class BookTestCase(TestCase):
 #         self.user = User.objects.create_user(
 #             username='pin', email='pin@pin.pin', password='pin-number')
 
-def mocked_requests_get(books):
-
+#
     #
     # felix = Author.objects.create(name='Fix It Felix Jr.')
     # steve = Author.objects.create(name='Armless Steve')
@@ -46,7 +45,7 @@ def mocked_requests_get(books):
     #
     #
 
-    return {books}
+   # return {books}
 
     # class MockResponse:
     #     def __init__(self, json_data, status_code):

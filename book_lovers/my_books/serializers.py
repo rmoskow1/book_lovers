@@ -9,7 +9,7 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         fields = ('title','author','publisher')
         #everything: fields = '__all__'
 
-class AuthorSerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Author
         fields = ('name')

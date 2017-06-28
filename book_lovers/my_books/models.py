@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length= 100)
     author = models.ManyToManyField('Author')  # one or more authors per book
     publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher
     date = models.DateField(blank=True, null=True)  # allows for unknown publishing date

@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
+from rest_framework.views import APIView  #a way to make normal views return API data
+from .serializers import BookSerializer
+from rest_framework.response import Response
 
 from .models import Book, Author
 from django.db.models import Q
@@ -16,6 +19,16 @@ from django.db.models import Q
 #class Favorites_updateView(DetailView):
     #model = Book
        
+class BookListTemp(APIView):
+    def get(self,request):
+        books = Book.objects.all()
+        serializer = BookSerializer(books,many = True) #many tells it, don't just return 1! (it will automatically return one)
+        return Response(serializer.data)
+    def post(self): #don't actually put this functionality in the same view! Have a createview, etc. 
+        pass
+
+
+
 def fav_updateView(self):
     model = Book
     book = Book.objects.all().filter(pk={'book.pk'})
@@ -56,7 +69,7 @@ class BookSearchMixin(object):
         q = self.request.GET.get('q')
         if q:
 # return a filtered queryset
-            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
+            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)|Q(publisher__name__icontains = q)).distinct()
 # No q is specified so we return queryset
         return queryset
 

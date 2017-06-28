@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework.urlpatterns import format_suffix_patterns
+from my_books.views import BookListTemp
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^bookstemp/',BookListTemp.as_view()),
     url(r'^books/', include('my_books.urls', namespace='books')),
     url(r'^account/', include('django.contrib.auth.urls', namespace='account')),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from django.test import TestCase, mock
 from django.views.generic import ListView
 from my_books.views import BookSearchMixin, FavoritesListView
 from django.test import TestCase, RequestFactory
@@ -7,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Q
 from my_books.models import Book, Publisher, Author
+from my_books.views import FavoritesListView
 import datetime, unittest
 from .factories import UserFactory, BookFactory, AuthorFactory
 import factory.fuzzy
@@ -14,35 +17,109 @@ import factory.fuzzy
 # Create your tests here.
 @unittest.skipIf(True == True, "not interested")
 class BookTestCase(TestCase):
+
+
+# Create your tests here.
+# class TestCaseMixin(TestCase):
+#     def setUp(self):
+#         grrr = Publisher.objects.create(name='How to Save a Life')
+#         felix = Author.objects.create(name='Fix It Felix Jr.')
+#         steve = Author.objects.create(name='Armless Steve')
+#         AuthList = [felix,steve]
+#         aa = Book.objects.create(title="Bob the Builder's Magical Mushrooms")
+#         bb = Book.objects.create(title="Factory Mishaps and Other Ways to Lose a Limb", publisher=grrr, date='1955-11-12')
+#         #aa.save()
+#         #bb.save()
+#         aa.author.add(AuthList[0])
+#         aa.author.add(AuthList[1])
+#         bb.author.add(AuthList[1])
+#         self.user = User.objects.create_user(
+#             username='pin', email='pin@pin.pin', password='pin-number')
+
+def mocked_requests_get(books):
+
+    #
+    # felix = Author.objects.create(name='Fix It Felix Jr.')
+    # steve = Author.objects.create(name='Armless Steve')
+    # aa = Book.objects.create(id=1, title="Bob the Builder's Magical Mushrooms", author = (felix,))
+    # bb = Book.objects.create(id=2, title="Factory Mishaps and Other Ways to Lose a Limb", author = (steve,))
+    #
+    #
+
+    return {books}
+
+    # class MockResponse:
+    #     def __init__(self, json_data, status_code):
+    #         self.json_data = json_data
+    #         self.status_code = status_code
+    #
+    #     def json(self):
+    #         return self.json_data
+    #
+    # if args[0] == 'http://someurl.com/test.json':
+    #     return MockResponse({"key1": "value1"}, 200)
+    # elif args[0] == 'http://someotherurl.com/anothertest.json':
+    #     return MockResponse({"key2": "value2"}, 200)
+
+# class BookCreateTest(TestCaseMixin):
+#
+#     def test_create_book(self):
+#         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
+#         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
+#
+#         self.assertEqual(aa.date, None)
+#         self.assertEqual(bb.date, datetime.date(1955, 11, 12))
+#         self.assertEqual(len(Book.objects.all()), 2)
+#
+#
+#     def test_delete_book(self):
+#         Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
+#         self.assertEqual(len(Book.objects.all()), 1)
+
+
+class FavoriteListViewTest(TestCase, FavoritesListView):
     def setUp(self):
-        grrr = Publisher.objects.create(name='How to Save a Life')
+
         felix = Author.objects.create(name='Fix It Felix Jr.')
         steve = Author.objects.create(name='Armless Steve')
-        AuthList = [felix,steve]
+        AuthList = [felix, steve]
         aa = Book.objects.create(title="Bob the Builder's Magical Mushrooms")
-        bb = Book.objects.create(title="Factory Mishaps and Other Ways to Lose a Limb", publisher=grrr, date='1955-11-12')
-        #aa.save()
-        #bb.save()
+        bb = Book.objects.create(title="Factory Mishaps and Other Ways to Lose a Limb")
+        aa.save()
+        bb.save()
         aa.author.add(AuthList[0])
         aa.author.add(AuthList[1])
         bb.author.add(AuthList[1])
 
-        self.assertEqual(aa.author.get(name='Fix It Felix Jr.'), felix)
+        global myBooks
+        myBooks = [aa,bb]
 
-    def test_create_book(self):
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_favorite(self, mockget):
         aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
         bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
+        aa.save()
+        bb.save()
 
-        self.assertEqual(aa.date, None)
-        self.assertEqual(bb.date, datetime.date(1955, 11, 12))        
-        self.assertEqual(len(Book.objects.all()), 2)
+        user = User(id=1, username="a", password="b", email='c@d.efg')
+        user.save()
 
+        user.fav_books.add(aa)
+        myView = FavoritesListView()
+        myView.request = mockget.requests.get
+        myView.request.user = user
 
     def test_delete_book(self):
         Book.objects.get(title="Bob the Builder's Magical Mushrooms").delete()
         self.assertEqual(len(Book.objects.all()), 1)
 #booksearch needs to test: 1.empty queryset 2.returning all values with the search in the author name 3.values with the search in the title 4.values with the exact search being the tag name 5. when a book is an answer for more than one category, it shouldn't appear twice 6. test that it's "recursive", that the page itself is searchable in the remaining content?
 #@unittest.skipIf(True == True, "not interested")     
+        for book in myView.get_queryset():
+            self.assertIn(book, user.fav_books.all())
+        self.assertEqual(len(myView.get_queryset()), len(user.fav_books.all()))
+
+        
+
 class BookSearchMixinTest(TestCase):
     """based on dnmellen - tests mixin within a fake template"""
     class DummyView(BookSearchMixin, ListView):
@@ -55,6 +132,11 @@ class BookSearchMixinTest(TestCase):
         super(BookSearchMixinTest,self).setUp()
         self.View = self.DummyView()
     
+    def assert_ListQuery(self,list,querySet): #simple helper method for checking a list and queryset are equal
+        for i in list:
+            self.assertIn(i,querySet) #every book in the list is in the queryset
+        self.assertEqual(len(list),len(querySet)) #the 2 contain the same number of elements
+     
     def test_PubSearch(self):
         '''test if search successfully finds all books with publisher names containing the search query'''
         #make some books with specific publisher names
@@ -68,9 +150,6 @@ class BookSearchMixinTest(TestCase):
         expected_books = [book1,book4]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books,actual_books)
-    
-    
-    
     #for some reason (yet unknown), if publisher isn't specified here, it's randomly generated name will change search query results. This is logical - the illogical part is that this problem doesn't exist 
     def test_AuthorSearch(self):
         '''test if the search successfully finds all books with author names containing the search query'''
@@ -127,18 +206,23 @@ class BookSearchMixinTest(TestCase):
             else: #if book IS in countList
                 assertFalse(True) #the query was not distinct!
         
+    def test_emptySearch(self):
+        #if the request is empty, the search's queryset should be the same as the parents
+        self.request = None 
+        self.assertEqual(self.View.get_queryset(), self.get_queryset())
+    def test_successSearch(self):
+        #test - the resulting queryset should just be the view's queryset properly filtered
+        request = self.factory.get("/list/")
+        newQuery =  self.View.get_queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)).distinct()
+        self.assertEqual(self.get_queryset(), newQuery)
         
         
-    def assert_ListQuery(self,list,querySet): #simple helper method for checking a list and queryset are equal
-        for i in list:
-            self.assertIn(i,querySet) #every book in the list is in the queryset
-        self.assertEqual(len(list),len(querySet)) #the 2 contain the same number of elements
-           
+   
 
 #BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here
 #BookListView uses only built-in ListView functionality - doesn't need to be tested here
 
-class FavoritesListViewTest(TestCase):
+class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
     '''tests that the FavoritesListView correctly displays a list of the user's favorite books (the user who made the request)'''
    
     def setup(self):
@@ -157,10 +241,7 @@ class FavoritesListViewTest(TestCase):
         for book in expected_books:
             self.assertIn(book, actual_books)
         self.assertEqual(len(actual_books),len(expected_books))
-     
-        
-       
-        
-        
+    
+   
 
         

@@ -6,18 +6,19 @@ from django.urls import reverse
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 #from book_lovers.forms import CreateForm
+<<<<<<< HEAD
 from rest_framework.views import APIView  #a way to make normal views return API data
 from .serializers import BookSerializer
 from rest_framework.response import Response
+=======
+from django.conf import settings
+>>>>>>> origin/master
 
 from .models import Book, Author
 from django.db.models import Q
 
 
-#class BooksActionMixin(object):
 
-#class Favorites_updateView(DetailView):
-    #model = Book
        
 class BookListTemp(APIView):
     def get(self,request):
@@ -29,23 +30,24 @@ class BookListTemp(APIView):
 
 
 
-def fav_updateView(self):
-    model = Book
-    book = Book.objects.all().filter(pk={'book.pk'})
-    if book in self.request.user.fav_books.all():
-        self.request.user.fav_books.remove(book)
-    else:
-        self.request.user.fav_books.add(book)
-    return render(self.request,request.PATH)
-def fav_form(self,request):
-    model = Book
-    
-    if self.object in request.user.fav_books.all():
-        request.user.fav_books.all().remove(self.object)
-    else:
-        request.user.fav_books.all().add(self.object)  
-    return HttpResponseRedirect(reverse('books:detail'))
-           
+# def fav_updateView(request):
+#     model = Book
+#
+#     if self.object in request.user.fav_books.all():
+#         request.user.fav_books.all().remove(self.object)
+#     else:
+#         request.user.fav_books.all().add(self.object)
+#     return render(request,request.PATH)
+# def fav_form(self,request):
+#     model = Book
+#
+#     if self.object in request.user.fav_books.all():
+#         request.user.fav_books.all().remove(self.object)
+#     else:
+#         request.user.fav_books.all().add(self.object)
+#     return HttpResponseRedirect(reverse('books:detail'))
+
+
 
 
 #from .forms import BookCreateForm, BookUpdateForm
@@ -106,17 +108,43 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
 
 
 
-class BooksDetailView(DetailView):
+class BooksDetailView(DetailView, UpdateView):
     model = Book
+    fields = ['users_who_favorite']
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
    # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
-    #def get_context(request):
-            #model = Book
-            ## Call the base implementation first to get a context
-            #context = super(BooksDetailView, self).get_context_data()
-            ## Add in a QuerySet of all the books
-            #context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
-            #return context   
+
+   #  def get_context_data(self, request):
+   #          # Call the base implementation first to get a context
+   #          context = super(self).get_context_data()
+   #          # Add in a QuerySet of all the books
+   #          context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
+   #          return context
+
+
+    template_name_suffix = '_detail'
+
+    def get_success_url(self):
+        return reverse('books:list')
+
+    # def favorite_request(request):
+    #         if request.method == 'GET':
+    #             if object in request.user.fav_books.all():
+    #                 request.user.fav_books.add(request.user)
+    #             else:
+    #                 request.user.fav_books.remove(request.user)
+
+    def get_context_data(self, **kwargs):
+
+        context = super(BooksDetailView, self).get_context_data(**kwargs)
+
+        if self.object in self.request.user.fav_books.all():
+            context['favorite'] = False
+        else:
+            context['favorite'] = True
+        return context
+
+
 
 
 class BooksListView(BookSearchMixin,ListView):
@@ -132,7 +160,7 @@ class FavoritesListView(BooksListView):
         # return a filtered queryset
             return self.request.user.fav_books.all()
 # No q is specified so we return queryset
-        return queryset        
+        return queryset
 
 
 class BooksDeleteView(LoginRequiredMixin, DeleteView):
@@ -155,7 +183,6 @@ class AuthorsCreateView(CreateView):
     # def form_valid(self, form):
     #     messages.info(self.request, self.success_msg)
     #     return super(BooksActionMixin, self).form_valid(form)
-    
 
 
 

@@ -18,11 +18,13 @@ from django.contrib import admin
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^books/', include('my_books.urls', namespace='books')),
     url(r'^account/', include('django.contrib.auth.urls', namespace='account')),
     url(r'^api/',include('my_books.APIUrls',namespace = 'api')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
 ]
 

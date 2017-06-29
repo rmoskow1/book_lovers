@@ -1,8 +1,8 @@
 from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
-from .serializers import BookSerializer, PublisherSerializer
-
+from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer
+from django.db.models import Count
 from django.contrib.auth.models import User
 from .models import Book, Author, Publisher
 
@@ -17,16 +17,29 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)  
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+
+#display only the books with at least 2 users who favorite
+class PopularBookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.filter(users_who_favorite__gte=1)
+  
+    serializer_class = BookSerializer
+    
+
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = None
+    serializer_class = UserSerializer
 
-
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
+    
+    
 class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer

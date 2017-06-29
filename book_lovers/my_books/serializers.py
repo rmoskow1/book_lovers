@@ -17,7 +17,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
     owner = models.ForeignKey('auth.User', related_name='owned_books', on_delete = models.CASCADE)
-    author = AuthorSerializer(read_only=True, many=True)
+    author = AuthorSerializer(many=True, read_only=False)
     users_who_favorite =  serializers.StringRelatedField( read_only = False,many = True)
     
     class Meta:

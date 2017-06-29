@@ -18,8 +18,8 @@ class BookList2(generics.ListCreateAPIView):
     serializer_class = BookSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class User(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
     serializer_class = None
     
     

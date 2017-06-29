@@ -1,10 +1,14 @@
 from rest_framework.views import APIView  #a way to make normal views return API data
-from rest_framework import viewsets,generics,permissions
-from .serializers import BookSerializer
-from rest_framework.response import Response
+
+from rest_framework import viewsets,generics, permissions
+from .serializers import BookSerializer, PublisherSerializer
 
 from django.contrib.auth.models import User
-from .models import Book, Author
+from .models import Book, Author, Publisher
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -12,7 +16,7 @@ class BookViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)  
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
+
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -21,11 +25,12 @@ class BookList2(generics.ListCreateAPIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = None
-    
-    
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
+
+
+class PublisherViewSet(viewsets.ModelViewSet):
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 #@api_view(['GET'])

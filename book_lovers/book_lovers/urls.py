@@ -16,11 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.urlpatterns import format_suffix_patterns
-from my_books.APIViews import BookListTemp
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^bookstemp/',BookListTemp),
     url(r'^books/', include('my_books.urls', namespace='books')),
     url(r'^account/', include('django.contrib.auth.urls', namespace='account')),
     url(r'^api/',include('my_books.APIUrls',namespace = 'api')),

@@ -50,7 +50,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
-    
+
     #queryset = Book.objects.filter(users_who_favorite__gte=1).distinct()
     num_fans = 1
     queryset = Book.objects.annotate(users=Count('users_who_favorite')).filter(users__gte=num_fans) #filter out the books with num_fans users

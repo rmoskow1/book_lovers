@@ -28,7 +28,7 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         book  = Book.objects.create(**validated_data)
         for users_data in users_data:
             User.objects.create(fav_books = (book,), **users_data)
-        return books
+        return book
     
 class UserSerializer(serializers.ModelSerializer):
     #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())

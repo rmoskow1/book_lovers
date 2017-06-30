@@ -4,11 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class UserSerializer(serializers.ModelSerializer):
-    owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
-    class Meta:
-        model = User
-        fields = ('username','password','email','owned_books','fav_books')
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +13,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
     owner = models.ForeignKey('auth.User', related_name='owned_books', on_delete = models.CASCADE)
-    author = AuthorSerializer(many=True, read_only=False)
+  #  author = AuthorSerializer(many=True, read_only=False)
     users_who_favorite =  serializers.StringRelatedField( read_only = False,many = True)
     
     class Meta:
@@ -33,6 +29,14 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         for users_data in users_data:
             User.objects.create(fav_books = (book,), **users_data)
         return books
+    
+class UserSerializer(serializers.ModelSerializer):
+    #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
+    owned_books = BookSerializer(many = True) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
+#without either, u can enter primary keys to books when creating a user, but can't create books at the same time
+    class Meta:
+        model = User
+        fields = ('username','password','email','owned_books','fav_books') 
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

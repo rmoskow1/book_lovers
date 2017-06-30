@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
@@ -71,6 +72,7 @@ class BookList2(generics.ListCreateAPIView):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()

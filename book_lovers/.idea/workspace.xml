@@ -16,7 +16,7 @@
         <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="435">
-              <caret line="29" column="26" lean-forward="false" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+              <caret line="39" column="26" lean-forward="false" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="APIViews.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="APIViews.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/my_books/APIViews.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="340">
+              <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="e#0#85#0" expanded="true" />
               </folding>
@@ -46,12 +46,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/my_books/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="480">
               <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1498837340000" expanded="true" signature="89:938" ph="..." />
+                <marker date="1498837340000" expanded="true" signature="912:938" ph="..." />
+                <marker date="1498837340000" expanded="true" signature="968:1201" ph="..." />
+                <marker date="1498837340000" expanded="true" signature="1176:1201" ph="..." />
+                <marker date="1498837340000" expanded="true" signature="1234:1597" ph="..." />
+                <marker date="1498837340000" expanded="true" signature="1572:1597" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -93,8 +100,9 @@
         <option value="$PROJECT_DIR$/book_lovers/urls.py" />
         <option value="$PROJECT_DIR$/my_books/serializers.py" />
         <option value="$PROJECT_DIR$/my_books/APIUrls.py" />
-        <option value="$PROJECT_DIR$/my_books/APIViews.py" />
         <option value="$PROJECT_DIR$/book_lovers/settings.py" />
+        <option value="$PROJECT_DIR$/my_books/models.py" />
+        <option value="$PROJECT_DIR$/my_books/APIViews.py" />
       </list>
     </option>
   </component>
@@ -105,8 +113,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="222" />
-    <option name="y" value="23" />
+    <option name="x" value="250" />
+    <option name="y" value="169" />
     <option name="width" value="1019" />
     <option name="height" value="689" />
   </component>
@@ -402,7 +410,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="222" y="23" width="1019" height="689" extended-state="0" />
+    <frame x="250" y="169" width="1019" height="689" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24926399" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -599,7 +607,7 @@
     <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
-          <caret line="29" column="26" lean-forward="false" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+          <caret line="39" column="26" lean-forward="false" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
@@ -611,16 +619,6 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_books/APIViews.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#85#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -636,7 +634,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
           <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1498837340000" expanded="true" signature="89:938" ph="..." />
+            <marker date="1498837340000" expanded="true" signature="912:938" ph="..." />
+            <marker date="1498837340000" expanded="true" signature="968:1201" ph="..." />
+            <marker date="1498837340000" expanded="true" signature="1176:1201" ph="..." />
+            <marker date="1498837340000" expanded="true" signature="1234:1597" ph="..." />
+            <marker date="1498837340000" expanded="true" signature="1572:1597" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_books/APIViews.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -12,9 +12,9 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
-    owner = models.ForeignKey('auth.User', related_name='owned_books', on_delete = models.CASCADE)
+    owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
   #  author = AuthorSerializer(many=True, read_only=False)
-    users_who_favorite =  serializers.StringRelatedField( read_only = False,many = True)
+    users_who_favorite =  serializers.StringRelatedField( read_only = True,many = True)
     
     class Meta:
         model = Book
@@ -32,11 +32,15 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     
 class UserSerializer(serializers.ModelSerializer):
     #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
-   # owned_books = BookSerializer(many = True) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
+    my_owned_books = BookSerializer(many = True, ) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
 #without either, u can enter primary keys to books when creating a user, but can't create books at the same time
     class Meta:
         model = User
         fields = ('username','password','email','owned_books','fav_books') 
+        extra_kwargs = {
+            'owned_books':{'write_only':True},
+            #'my_owned_books':{'write_only':True}
+            }
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

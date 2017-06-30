@@ -8,12 +8,6 @@ from .models import Book, Author, Publisher
 import django_filters.rest_framework
 
 
-class BookList2(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -25,7 +19,20 @@ class BookViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)  
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
+    #@detail_route(methods = ['patch'])
+    #def partial_update(self, request, *args, **kwargs):
+        #instance = self.queryset.get(pk=kwargs.get('pk'))
+        #serializer = self.serializer_class(instance, data=request.data, partial=True)
+        #serializer.is_valid(raise_exception=True)
+        #serializer.save()
+        #return Response(serializer.data
+    def patch(self, request,id):
+        testmodel = self.get_object(id)
+        serializer = BookSerializer(testmodel, data=request.data, partial=True) # set partial=True to update a data partially
+        if serializer.is_valid():
+            serializer.save()
+            return JsonReponse(code=201, data=serializer.data)
+        return JsonResponse(code=400, data="wrong parameters")   
 
 # class MultipleFieldLookupMixin(object):
 #     """
@@ -43,10 +50,6 @@ class BookViewSet(viewsets.ModelViewSet):
 
 
 
-
-
-
-
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
     #queryset = Book.objects.filter(users_who_favorite__gte=1).distinct()
@@ -54,8 +57,6 @@ class PopularBookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.annotate(users=Count('users_who_favorite')).filter(users__gte=num_fans) #filter out the books with num_fans users 
     serializer_class = BookSerializer
     
-
-
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer

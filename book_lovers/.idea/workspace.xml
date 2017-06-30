@@ -15,8 +15,8 @@
       <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="43" column="26" lean-forward="false" selection-start-line="43" selection-start-column="26" selection-end-line="43" selection-end-column="26" />
+            <state relative-caret-position="229">
+              <caret line="42" column="11" lean-forward="true" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="11" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
@@ -24,11 +24,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="APIViews.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="APITests.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/my_books/APITests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="APIViews.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/my_books/APIViews.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="52" column="4" lean-forward="false" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+            <state relative-caret-position="870">
+              <caret line="58" column="41" lean-forward="true" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
               <folding>
                 <element signature="e#0#85#0" expanded="true" />
               </folding>
@@ -89,6 +99,13 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -98,11 +115,12 @@
         <option value="$PROJECT_DIR$/my_books/urls.py" />
         <option value="$PROJECT_DIR$/my_books/tests.py" />
         <option value="$PROJECT_DIR$/book_lovers/urls.py" />
-        <option value="$PROJECT_DIR$/my_books/serializers.py" />
         <option value="$PROJECT_DIR$/my_books/APIUrls.py" />
         <option value="$PROJECT_DIR$/book_lovers/settings.py" />
         <option value="$PROJECT_DIR$/my_books/models.py" />
         <option value="$PROJECT_DIR$/my_books/APIViews.py" />
+        <option value="$PROJECT_DIR$/my_books/serializers.py" />
+        <option value="$PROJECT_DIR$/my_books/APITests.py" />
       </list>
     </option>
   </component>
@@ -547,35 +565,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_books/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-328">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#24#63#0" expanded="false" />
-            <marker date="1498691832000" expanded="true" signature="633:1856" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="654:1169" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="1240:1856" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="1860:2278" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="2326:7168" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="2439:2567" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="2598:2683" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="2734:2996" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="3032:3784" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="4024:5123" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="5164:5612" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="5644:6593" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="6629:7168" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="6980:7168" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="7203:7384" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="7425:8314" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="7612:7663" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="7700:8314" ph="..." />
-            <marker date="1498691832000" expanded="true" signature="7761:7814" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/my_books/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -590,16 +579,6 @@
           <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding>
             <marker date="1498766792000" expanded="true" signature="800:1136" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="43" column="26" lean-forward="false" selection-start-line="43" selection-start-column="26" selection-end-line="43" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -645,13 +624,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/my_books/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/my_books/APIViews.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="52" column="4" lean-forward="false" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+        <state relative-caret-position="870">
+          <caret line="58" column="41" lean-forward="true" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
           <folding>
             <element signature="e#0#85#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="42" column="11" lean-forward="true" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_books/APITests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

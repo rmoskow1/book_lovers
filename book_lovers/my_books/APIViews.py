@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
@@ -32,7 +33,7 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = BookSerializer(testmodel, data=request.data, partial=True) # set partial=True to update a data partially
         if serializer.is_valid():
             serializer.save()
-            return JsonReponse(code=201, data=serializer.data)
+            return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")   
 
 # class MultipleFieldLookupMixin(object):
@@ -66,6 +67,7 @@ class BookList2(generics.ListCreateAPIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()

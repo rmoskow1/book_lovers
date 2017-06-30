@@ -16,6 +16,7 @@ from rest_framework.reverse import reverse
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class =BookSerializer
+    filter_fields = ('title',)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)  
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -52,6 +53,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
+    
     #queryset = Book.objects.filter(users_who_favorite__gte=1).distinct()
     num_fans = 1
     queryset = Book.objects.annotate(users=Count('users_who_favorite')).filter(users__gte=num_fans) #filter out the books with num_fans users 
@@ -60,7 +62,6 @@ class PopularBookViewSet(viewsets.ModelViewSet):
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

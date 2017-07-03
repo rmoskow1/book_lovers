@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class Book(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL,null = True, related_name = 'owned_books')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null = True, related_name = 'owned_books')
     title = models.CharField(max_length= 100)
     author = models.ManyToManyField('Author')  # one or more authors per book
     publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher

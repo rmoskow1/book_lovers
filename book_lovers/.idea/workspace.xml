@@ -12,11 +12,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="serializers.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state relative-caret-position="169">
+              <caret line="52" column="19" lean-forward="false" selection-start-line="52" selection-start-column="19" selection-end-line="52" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -29,6 +29,14 @@
               <caret line="47" column="17" lean-forward="false" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
+                <marker date="1499123125000" expanded="true" signature="90:988" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="962:988" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1018:1251" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1226:1251" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1284:1647" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1622:1647" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1673:1771" ph="..." />
+                <marker date="1499123125000" expanded="true" signature="1746:1771" ph="..." />
               </folding>
             </state>
           </provider>
@@ -44,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api_views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="api_views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/my_books/api_views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="675">
-              <caret line="45" column="37" lean-forward="false" selection-start-line="45" selection-start-column="37" selection-end-line="45" selection-end-column="37" />
+            <state relative-caret-position="1395">
+              <caret line="93" column="66" lean-forward="false" selection-start-line="93" selection-start-column="66" selection-end-line="93" selection-end-column="66" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -79,8 +87,8 @@
         <option value="$PROJECT_DIR$/my_books/views.py" />
         <option value="$PROJECT_DIR$/book_lovers/settings.py" />
         <option value="$PROJECT_DIR$/my_books/models.py" />
-        <option value="$PROJECT_DIR$/my_books/serializers.py" />
         <option value="$PROJECT_DIR$/my_books/api_views.py" />
+        <option value="$PROJECT_DIR$/my_books/serializers.py" />
       </list>
     </option>
   </component>
@@ -658,25 +666,33 @@
           <caret line="47" column="17" lean-forward="false" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
+            <marker date="1499123125000" expanded="true" signature="90:988" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="962:988" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1018:1251" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1226:1251" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1284:1647" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1622:1647" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1673:1771" ph="..." />
+            <marker date="1499123125000" expanded="true" signature="1746:1771" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_books/api_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1395">
+          <caret line="93" column="66" lean-forward="false" selection-start-line="93" selection-start-column="66" selection-end-line="93" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/my_books/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state relative-caret-position="169">
+          <caret line="52" column="19" lean-forward="false" selection-start-line="52" selection-start-column="19" selection-end-line="52" selection-end-column="19" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/my_books/api_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="45" column="37" lean-forward="false" selection-start-line="45" selection-start-column="37" selection-end-line="45" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

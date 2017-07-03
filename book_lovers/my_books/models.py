@@ -45,4 +45,4 @@ class Tag(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
     books = models.ManyToManyField('Book')
-    publisher = ''
+    publisher = models.

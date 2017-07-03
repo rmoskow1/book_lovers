@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Book,Author,Publisher,Tag
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.db import models
 
 
@@ -34,11 +35,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username','email', 'owned_books', 'fav_books')
-        write_only_fields = ('password')
+        write_only_fields = ('password',)
         # extra_kwargs = {
         #     'owned_books':{'write_only':True},
         #     #'my_owned_books':{'write_only':True}
-        #     }
+    def perform_create(self, **validated_data):
+        # call set_password on user object. Without this
+        # the password will be stored in plain text.
+        user = User.objects.create(**validated_data)
+       # user.save(password = make_password(validated_data['password']))
+        return user
+       
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

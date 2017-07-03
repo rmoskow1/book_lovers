@@ -52,10 +52,10 @@ class BookViewSet(viewsets.ModelViewSet):
 #         return filter  # Lookup the object
 
 
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    #queryset = Book.objects.all()
+    #serializer_class = BookSerializer
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
@@ -69,30 +69,37 @@ class PopularBookViewSet(viewsets.ModelViewSet):
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+#a permission designed for UserViewSet -- only staff can see a list of all users. And only staff or the user itself can view a user detail page   
+class IsStaffOrTargetUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        # allow user to list all users if logged in user is staff
+        return view.action == 'retrieve' or request.user.is_staff 
+ 
+    def has_object_permission(self, request, view, obj):
+        # allow logged in user to view own details, allows staff to view all records
+        return request.user.is_staff or obj == request.user
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    model = User
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsStaffOrTargetUser,)
     
 
 class AuthorViewSet(viewsets.ModelViewSet): #author list - authors can be created here
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
-
-class AuthorDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual authors
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-       
+
 class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can be created here
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers
-    queryset = Publisher.objects.all()
-    serializer_class = PublisherSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers
+    #queryset = Publisher.objects.all()
+    #serializer_class = PublisherSerializer
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 

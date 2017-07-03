@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from .models import Book, Author, Publisher
 import django_filters.rest_framework
 
-
+from django.http import JsonResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -28,9 +28,10 @@ class BookViewSet(viewsets.ModelViewSet):
         #serializer.is_valid(raise_exception=True)
         #serializer.save()
         #return Response(serializer.data
-    def patch(self, request,id):
-        testmodel = self.get_object(id)
-        serializer = BookSerializer(testmodel, data=request.data, partial=True) # set partial=True to update a data partially
+    def patch(self, request):
+        data = request.data
+        testmodel = (data.get('id'))
+        serializer = BookSerializer(data=request.data, partial=True) # set partial=True to update a data partially
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(code=201, data=serializer.data)
@@ -52,6 +53,10 @@ class BookViewSet(viewsets.ModelViewSet):
 
 
 
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
 
@@ -64,7 +69,7 @@ class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 

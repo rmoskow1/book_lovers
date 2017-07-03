@@ -19,19 +19,21 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     class Meta:
         model = Book
         #what attributes do we want to return to the user? Not necesarily everything...
-        fields = ('title','author','publisher','owner','users_who_favorite')
+        fields = ('id','title','author','publisher','owner','users_who_favorite')
         #everything: fields = '__all__'
     
-    def create(self, validated_data):
-        #should be able to create new model instance for any related field
-        users_data = validated_data.pop('users_who_favorite')
-        book  = Book.objects.create(**validated_data)
-        for users_data in users_data:
-            User.objects.create(fav_books = (book,), **users_data)
-        return book
+    #def create(self, validated_data):
+        ##should be able to create new model instance for any related field
+        #users_data = validated_data.pop('users_who_favorite')
+        #book  = Book.objects.create(**validated_data)
+        #for users_data in users_data:
+            #User.objects.create(fav_books = (book,), **users_data)
+        #return book
     
 class UserSerializer(serializers.ModelSerializer):
-    owned_books = BookSerializer(many = True, read_only=True)
+    #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
+   # my_owned_books = BookSerializer(many = True, ) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
+   # owned_books = BookSerializer(many = True, read_only=True)
 
     #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
 #without either, u can enter primary keys to books when creating a user, but can't create books at the same time

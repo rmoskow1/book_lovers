@@ -43,4 +43,6 @@ class Tag(models.Model):
         return self.name
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
+    books = models.ManyToManyField('Book')
+    publisher = ''

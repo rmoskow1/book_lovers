@@ -1,21 +1,24 @@
 from rest_framework import routers
-from my_books import api_views
+from my_books import APIViews
 from django.conf.urls import url,include
 from rest_framework_swagger.views import get_swagger_view
 
 schema_view = get_swagger_view(title='Pastebin API')
 
 router = routers.DefaultRouter()
-router.register(r'publishers', api_views.PublisherViewSet)
-router.register(r'books', api_views.BookViewSet)
-router.register(r'popularbooks', api_views.PopularBookViewSet)
-router.register(r'authors', api_views.AuthorViewSet)
-router.register(r'users', api_views.UserViewSet)
+router.register(r'books', APIViews.BookViewSet) 
+router.register(r'popularbooks', APIViews.PopularBookViewSet)
+router.register(r'authors',APIViews.AuthorViewSet)
+router.register(r'publishers', APIViews.PublisherViewSet)
+router.register(r'users',APIViews.UserViewSet)
+
 
 
 urlpatterns = [
                 url(r'^docs/', schema_view),
-                url(r'bookdetail/(?P<pk>\d+)/$', api_views.BookDetailView.as_view()),
-                url(r'books2/', api_views.BookList2.as_view()),
+                url(r'bookdetail/(?P<pk>\d+)/$',APIViews.BookDetailView.as_view()),
+                url(r'pubdetail/(?P<pk>\d+)/$',APIViews.PubDetailView.as_view()),
+                url(r'authordetail/(?P<pk>\d+)/$',APIViews.AuthorDetailView.as_view()),
+                url(r'books2/',APIViews.BookList2.as_view()),
 ]
 urlpatterns += router.urls

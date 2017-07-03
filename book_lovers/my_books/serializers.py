@@ -5,11 +5,10 @@ from django.db import models
 
 
 
-
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ('name',)
+        fields = '__all__'
 
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
     owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
@@ -18,7 +17,6 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     
     class Meta:
         model = Book
-        #what attributes do we want to return to the user? Not necesarily everything...
         fields = ('id','title','author','publisher','owner','users_who_favorite')
         #everything: fields = '__all__'
     
@@ -32,8 +30,12 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     
 class UserSerializer(serializers.ModelSerializer):
 
+
     #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
-#without either, u can enter primary keys to books when creating a user, but can't create books at the same time
+    #without either, u can enter primary keys to books when creating a user, but can't create books at the same time
+    #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
+    # my_owned_books = BookSerializer(many = True, ) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
+
     class Meta:
         model = User
         fields = ('username','email', 'owned_books', 'fav_books')

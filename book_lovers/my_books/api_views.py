@@ -41,11 +41,10 @@ class BookViewPermission(permissions.BasePermission):
             else:
                 return request.object
 
-
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = ('BookViewPermission',)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
@@ -54,26 +53,33 @@ class PopularBookViewSet(viewsets.ModelViewSet):
     num_fans = 1
     queryset = Book.objects.annotate(users=Count('users_who_favorite')).filter(users__gte=num_fans) #filter out the books with num_fans users 
     serializer_class = BookSerializer
-    
+
+#identical to BookListView - but using generic views instead    
 class BookList2(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
 
-
-class AuthorViewSet(viewsets.ModelViewSet):
+class AuthorViewSet(viewsets.ModelViewSet): #author list - authors can be created here
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_class = (permissions.IsAuthenticatedOrReadOnly,)
-    
-    
-class PublisherViewSet(viewsets.ModelViewSet):
+
+class AuthorDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual authors
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+       
+class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can be created here
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
 
 #@api_view(['GET'])
 #def api_root(request, format=None):
@@ -81,3 +87,9 @@ class PublisherViewSet(viewsets.ModelViewSet):
         ##'users': reverse('user-list', request=request, format=format),
         #'books2': reverse('api:book-list', request=request, format=format)
     #})
+
+class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+

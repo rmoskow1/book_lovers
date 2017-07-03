@@ -1,6 +1,4 @@
 from django.http import JsonResponse
-from rest_framework.views import APIView  #a way to make normal views return API data
-
 from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer
 from django.db.models import Count

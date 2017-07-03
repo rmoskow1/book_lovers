@@ -6,6 +6,7 @@ from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, U
 from django.db.models import Count
 from django.contrib.auth.models import User
 from .models import Book, Author, Publisher
+from django.http import Http404
 import django_filters.rest_framework
 
 from django.http import JsonResponse
@@ -21,13 +22,8 @@ class BookViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)  
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    #@detail_route(methods = ['patch'])
-    #def partial_update(self, request, *args, **kwargs):
-        #instance = self.queryset.get(pk=kwargs.get('pk'))
-        #serializer = self.serializer_class(instance, data=request.data, partial=True)
-        #serializer.is_valid(raise_exception=True)
-        #serializer.save()
-        #return Response(serializer.data
+
+
     def patch(self, request):
         data = request.data
         testmodel = (data.get('id'))
@@ -37,25 +33,19 @@ class BookViewSet(viewsets.ModelViewSet):
             return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")   
 
-# class MultipleFieldLookupMixin(object):
-#     """
-#     Apply this mixin to any view or viewset to get multiple field filtering
-#     based on a `lookup_fields` attribute, instead of the default single field filtering.
-#     """
-#     def get_object(self):
-#         queryset = self.get_queryset()             # Get the base queryset
-#         queryset = self.filter_queryset(queryset)  # Apply any filter backends
-#         filter = {}
-#         for field in self.lookup_fields:
-#             if self.kwargs[field]: # Ignore empty fields.
-#                 filter[field] = self.kwargs[field]
-#         return filter  # Lookup the object
-
+class BookViewPermission(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_authenticated():
+            if (not request.object.isPublished) and (request.user.profile.is_publisher() or request.user.profile.is_author()):
+                return Http404
+            else:
+                return request.object
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = ('BookViewPermission',)
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
@@ -84,8 +74,6 @@ class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
 
 #@api_view(['GET'])
 #def api_root(request, format=None):

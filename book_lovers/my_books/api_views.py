@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from rest_framework.views import APIView  #a way to make normal views return API data
+#from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer
@@ -33,13 +33,6 @@ class BookViewSet(viewsets.ModelViewSet):
             return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")   
 
-class BookViewPermission(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated():
-            if (not request.object.isPublished) and (request.user.profile.is_publisher() or request.user.profile.is_author()):
-                return Http404
-            else:
-                return request.object
 
 #class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     #queryset = Book.objects.all()

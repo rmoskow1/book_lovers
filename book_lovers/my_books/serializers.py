@@ -31,9 +31,6 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         #return book
     
 class UserSerializer(serializers.ModelSerializer):
-    #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
-   # my_owned_books = BookSerializer(many = True, ) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
-   # owned_books = BookSerializer(many = True, read_only=True)
 
     #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
 #without either, u can enter primary keys to books when creating a user, but can't create books at the same time
@@ -41,10 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username','email', 'owned_books', 'fav_books')
         write_only_fields = ('password')
-        # extra_kwargs = {
-        #     'owned_books':{'write_only':True},
-        #     #'my_owned_books':{'write_only':True}
-        #     }
+
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

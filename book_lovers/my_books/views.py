@@ -15,38 +15,6 @@ from django.db.models import Q
 
 
 
-
-       
-
-    #def get(self,request):
-        #books = Book.objects.all()
-        #serializer = BookSerializer(books,many = True) #many tells it, don't just return 1! (it will automatically return one)
-        #return Response(serializer.data)
-    #def post(self): #don't actually put this functionality in the same view! Have a createview, etc. 
-        #pass
-
-
-
-# def fav_updateView(request):
-#     model = Book
-#
-#     if self.object in request.user.fav_books.all():
-#         request.user.fav_books.all().remove(self.object)
-#     else:
-#         request.user.fav_books.all().add(self.object)
-#     return render(request,request.PATH)
-# def fav_form(self,request):
-#     model = Book
-#
-#     if self.object in request.user.fav_books.all():
-#         request.user.fav_books.all().remove(self.object)
-#     else:
-#         request.user.fav_books.all().add(self.object)
-#     return HttpResponseRedirect(reverse('books:detail'))
-
-
-
-
 #from .forms import BookCreateForm, BookUpdateForm
 class BooksActionMixin(object):
     fields = ['title', 'author', 'publisher', 'date', 'tags']

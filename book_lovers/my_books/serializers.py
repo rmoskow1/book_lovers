@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book,Author,Publisher,Tag
+from .models import Book,Author,Publisher,Tag,Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.db import models
@@ -55,5 +55,10 @@ class UserSerializer(serializers.ModelSerializer):
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
+        fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
         fields = '__all__'
 

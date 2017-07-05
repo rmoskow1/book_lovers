@@ -2,10 +2,10 @@ from django.http import JsonResponse
 #from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
-from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer
+from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
-from .models import Book, Author, Publisher
+from .models import Book, Author, Publisher, Profile
 from django.http import Http404
 import django_filters.rest_framework
 
@@ -24,7 +24,7 @@ class BookViewPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated():
-            if (obj.isPublished) or ((request.user.profile.publisher == obj.publisher) or (obj in request.user.profile.books.all())):
+            if (obj.isPublished) or ((request.user.profile.publisher == obj.publisher) or (obj in request.user.owned_books.all())):
                 return True
             else:
                 return False
@@ -97,6 +97,11 @@ class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can 
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
 
 #class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers

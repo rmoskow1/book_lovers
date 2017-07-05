@@ -45,7 +45,7 @@ class Tag(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
     #books = models.ManyToManyField('Book')
-    publisher = models.ForeignKey('Publisher')
+    publisher = models.ForeignKey('Publisher', null=True, blank=True)
 
     def __str__(self):
         return self.user.__str__() + "'s profile"

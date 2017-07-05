@@ -19,8 +19,7 @@ from rest_framework.reverse import reverse
 class BookViewPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         # allow user to list all users if logged in user is staff
-        return view.action == 'retrieve' or request.user.is_staff
-
+        return request.user.is_authenticated()
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated():
@@ -103,6 +102,18 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+
+# def list(self, request):
+#     queryset = User.objects.all()
+#     serializer = UserSerializer(queryset, many=True)
+#     return Response(serializer.data)
+#
+#
+# def retrieve(self, request, pk=None):
+#     queryset = User.objects.all()
+#     user = get_object_or_404(queryset, pk=pk)
+#     serializer = UserSerializer(user)
+#     return Response(serializer.data)
 
 #class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers
     #queryset = Publisher.objects.all()

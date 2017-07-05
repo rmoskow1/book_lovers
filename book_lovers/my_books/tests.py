@@ -15,9 +15,6 @@ from .factories import UserFactory, BookFactory, AuthorFactory
 import factory.fuzzy
 
 
-
-
-
 class FavoriteListViewTest(TestCase, FavoritesListView):
     def setUp(self):
 

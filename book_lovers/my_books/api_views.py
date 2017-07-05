@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from rest_framework.views import APIView  #a way to make normal views return API data
+#from rest_framework.views import APIView  #a way to make normal views return API data
 
 from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer
@@ -15,13 +15,30 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+
+class BookViewPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        # allow user to list all users if logged in user is staff
+        return view.action == 'retrieve' or request.user.is_staff
+
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_authenticated():
+            if (obj.isPublished) or ((request.user.profile.publisher == obj.publisher) or (obj in request.user.profile.books.all())):
+                return True
+            else:
+                return False
+        return False
+
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class =BookSerializer
     filter_fields = ('title',)
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)  
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (BookViewPermission,)
 
 
     def patch(self, request):
@@ -33,18 +50,12 @@ class BookViewSet(viewsets.ModelViewSet):
             return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")   
 
-class BookViewPermission(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated():
-            if (not request.object.isPublished) and (request.user.profile.is_publisher() or request.user.profile.is_author()):
-                return Http404
-            else:
-                return request.object
 
-#class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    #queryset = Book.objects.all()
-    #serializer_class = BookSerializer
-    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+# class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+#
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+#     permission_classes = [BookViewPermission]
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):

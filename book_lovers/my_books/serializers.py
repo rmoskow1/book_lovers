@@ -20,15 +20,7 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         model = Book
         fields = ('id','title','author','publisher','owner','users_who_favorite')
         #everything: fields = '__all__'
-    
-    #def create(self, validated_data):
-        ##should be able to create new model instance for any related field
-        #users_data = validated_data.pop('users_who_favorite')
-        #book  = Book.objects.create(**validated_data)
-        #for users_data in users_data:
-            #User.objects.create(fav_books = (book,), **users_data)
-        #return book
-    
+  
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -20,37 +20,24 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         model = Book
         fields = ('id','title','author','publisher','owner','users_who_favorite')
         #everything: fields = '__all__'
-    
-    #def create(self, validated_data):
-        ##should be able to create new model instance for any related field
-        #users_data = validated_data.pop('users_who_favorite')
-        #book  = Book.objects.create(**validated_data)
-        #for users_data in users_data:
-            #User.objects.create(fav_books = (book,), **users_data)
-        #return book
-    
+  
 class UserSerializer(serializers.ModelSerializer):
-
-
-    #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
-    #without either, u can enter primary keys to books when creating a user, but can't create books at the same time
-    #owned_books = serializers.PrimaryKeyRelatedField(many = True, queryset = Book.objects.all())
-    # my_owned_books = BookSerializer(many = True, ) #Lists are not currently supported in HTML input. - from the form. Books are displayed in full. You have to enter data for books as full dictionaries, maybe creating a new one is fine?
-
     class Meta:
         model = User
-        fields = ('username','email', 'owned_books', 'fav_books')
-
-        write_only_fields = ('password',)
-        # extra_kwargs = {
-        #     'owned_books':{'write_only':True},
-        #     #'my_owned_books':{'write_only':True}
-    def perform_create(self, **validated_data):
-        # call set_password on user object. Without this
-        # the password will be stored in plain text.
-        user = User.objects.create(**validated_data)
-       # user.save(password = make_password(validated_data['password']))
+        fields = ('username','email', 'owned_books', 'fav_books','password')
+        extra_kwargs = {
+            'password': {'write_only':True}
+            }
+   
+    def create(self, validated_data):
+        #create a new user with a properly hashed password
+        #using the default create would produce a user without an unhashed password
+        user = super().create(validated_data)
+        user.set_password(validated_data['password']) 
+        user.save()
         return user
+        
+
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

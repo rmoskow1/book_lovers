@@ -1,6 +1,4 @@
 from django.http import JsonResponse
-#from rest_framework.views import APIView  #a way to make normal views return API data
-
 from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
@@ -48,13 +46,7 @@ class BookViewSet(viewsets.ModelViewSet):
             serializer.save()
             return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")   
-
-
-# class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-#
-#     queryset = Book.objects.all()
-#     serializer_class = BookSerializer
-#     permission_classes = [BookViewPermission]
+      
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
@@ -84,8 +76,8 @@ class UserViewSet(viewsets.ModelViewSet):
     model = User
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsStaffOrTargetUser,)
-    
+
+    permission_classes = (IsStaffOrTargetUser,)    
 
 class AuthorViewSet(viewsets.ModelViewSet): #author list - authors can be created here
     queryset = Author.objects.all()
@@ -101,21 +93,3 @@ class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can 
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-
-
-# def list(self, request):
-#     queryset = User.objects.all()
-#     serializer = UserSerializer(queryset, many=True)
-#     return Response(serializer.data)
-#
-#
-# def retrieve(self, request, pk=None):
-#     queryset = User.objects.all()
-#     user = get_object_or_404(queryset, pk=pk)
-#     serializer = UserSerializer(user)
-#     return Response(serializer.data)
-
-#class PubDetailView(generics.RetrieveUpdateDestroyAPIView): #edit individual publishers
-    #queryset = Publisher.objects.all()
-    #serializer_class = PublisherSerializer
-    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

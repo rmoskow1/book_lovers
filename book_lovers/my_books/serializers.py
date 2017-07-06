@@ -37,7 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
         
-       
+
 
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:

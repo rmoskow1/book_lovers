@@ -14,11 +14,7 @@
 {%endif%}
 
 <h1>Book List</h1>
-{%comment%}
-<form type="get" action="." style="margin: 0">
-    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
-    <button id="search_submit" type="submit" >Submit</button>
-</form>{%endcomment%}
+
 <form action="" method="GET">
     <input type="text" name = "q" />
     <button type="submit">search</button>
@@ -41,26 +37,3 @@
 
 
 {% endblock %}
-
-
-
-
-
-{%comment%}{% block content %}
-    <h1>Book List</h1>
-
-    {% if book_list %}
-    <ul>
-
-      {% for book in book_list %}
-      <li>
-        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
-      </li>
-      <p> Blah blah blah</p>
-      {% endfor %}
-
-    </ul>
-    {% else %}
-      <p>There are no books in the library.</p>
-    {% endif %}
-{% endblock %}{%endcomment%}

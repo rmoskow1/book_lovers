@@ -11,7 +11,8 @@ router.register(r'books', api_views.BookViewSet)
 router.register(r'popularbooks', api_views.PopularBookViewSet)
 router.register(r'authors',api_views.AuthorViewSet)
 router.register(r'publishers', api_views.PublisherViewSet)
-router.register(r'users',api_views.UserViewSet,name = 'users')
+router.register(r'users',api_views.UserViewSet)
+
 
 
 

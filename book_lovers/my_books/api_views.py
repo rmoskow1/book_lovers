@@ -32,6 +32,7 @@ class BookViewSet(viewsets.ModelViewSet):
         return JsonResponse(code=400, data="wrong parameters")   
 
 
+
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):
 
@@ -60,8 +61,8 @@ class UserViewSet(viewsets.ModelViewSet):
     model = User
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
     permission_classes = (IsStaffOrTargetUser,)    
-    
 
 class AuthorViewSet(viewsets.ModelViewSet): #author list - authors can be created here
     queryset = Author.objects.all()

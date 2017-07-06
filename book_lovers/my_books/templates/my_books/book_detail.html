@@ -11,15 +11,7 @@
 <p>Tag(s): {% for tag in object.tags.all %}
              {{ tag }}{% if not forloop.last %},{% endif %}
           {% endfor %}</p>
-{%comment%}
-<form type="get" action="." style="margin: 0">
-    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
-    <button id="search_submit" type="submit" >Submit</button>
-</form>
-<form action="books:favorites_update" method="POST">
-    <button type="submit" formethod = "POST">{%if object not in user.fav_books.all%} Favorite {%else%}  Unfavorite{%endif%}</button>
-</form>object not in user.fav_books.all
-{%endcomment%}
+
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_table }}

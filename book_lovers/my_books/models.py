@@ -13,6 +13,7 @@ class Book(models.Model):
     users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = 'fav_books')
     isPublished = models.BooleanField(default=False)
     tags = models.ManyToManyField('Tag',related_name = 'tagged_books', blank = True)
+
     def __str__(self):
         return self.title
 
@@ -42,7 +43,11 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
-    books = models.ManyToManyField('Book')
-    publisher = models.
+    publisher = models.ForeignKey('Publisher', null=True, blank=True)
+
+    def __str__(self):
+        return self.user.__str__() + "'s profile"
+

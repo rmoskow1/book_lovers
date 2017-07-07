@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from django.db.models import Q
 
 
 class BookViewPermission(permissions.BasePermission):
@@ -32,9 +33,15 @@ class BookViewPermission(permissions.BasePermission):
         return False
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Book.objects.all()
+        else:
+            return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
+
+    queryset = Book.objects.get_queryset()
     serializer_class =BookSerializer
-    filter_fields = ('title',)
+    filter_fields = ('isPublished','isVerified')
     permission_classes = (BookViewPermission,)
 
     def perform_create(self, serializer):

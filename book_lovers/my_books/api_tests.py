@@ -254,7 +254,7 @@ class AuthorProjectTests(TestCase):
         
     def test_not_public_permissions(self):
         book = BookFactory()
-        book.isPublished,book.isVerified = False
+        book.is_public() = False
         request = APIRequestFactory().get("")
         force_authenticate(request, user = self.the_user) #request with a regular - non admin user
         response = self.view(request,pk = book.pk) #detail page of the not public book

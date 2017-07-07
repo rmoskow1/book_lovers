@@ -1,4 +1,4 @@
-from .models import Book, Publisher, Author
+from .models import Book, Publisher
 from django.contrib.auth.models import User
 import factory
 import factory.fuzzy
@@ -22,6 +22,8 @@ class UserFactory(factory.DjangoModelFactory):
     username = factory.fuzzy.FuzzyText()
     email = factory.LazyAttribute(lambda obj: '%s@example.com' % obj.username)
     password = factory.fuzzy.FuzzyText()
+    profile = factory.SubFactory(ProfileFactory)
+    
     @factory.post_generation
     def fav_books(self, create, count, **kwargs):
         if count is None:
@@ -32,6 +34,10 @@ class UserFactory(factory.DjangoModelFactory):
         if not create:
             # Fiddle with django internals so self.product_set.all() works with build()
             self._prefetched_objects_cache = {'fav_book': fav_books}  
+
+class ProfileFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Profile
 
 class BookFactory(factory.DjangoModelFactory):
     class Meta:
@@ -46,9 +52,7 @@ class BookFactory(factory.DjangoModelFactory):
     uploader= factory.SubFactory(UserFactory)
     isPublished = False
     isVerified = False #default creation of a book
-    def isPublic(self):
-        return False #this method is false by default
-   
+    
                 
     @factory.post_generation
     def users_who_favorite(self, create, extracted, **kwargs):

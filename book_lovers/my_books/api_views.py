@@ -63,18 +63,8 @@ class BookViewSet(viewsets.ModelViewSet):
             serializer.save()
             return JsonResponse(code=201, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")  
-    
-    #def post(self):
-        #data = self.request.data
-        #type = data.__getitem__('type')
-        #if type == 'write':
-            #pass
-        #elif type == 'upload':
-            #self.perform_create()
-        #else:
-            #self.perform_create()
-        
-      
+
+            
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):

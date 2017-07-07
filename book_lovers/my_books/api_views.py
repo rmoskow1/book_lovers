@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework import viewsets,generics, permissions
-from .serializers import BookSerializer, PublisherSerializer,AuthorSerializer, UserSerializer, ProfileSerializer
+from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
 from .models import Book, Author, Publisher, Profile
@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from django.db.models import Q
 
 
 class BookViewPermission(permissions.BasePermission):
@@ -21,32 +22,38 @@ class BookViewPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated():
-            if (obj.isPublished) or ((request.user.profile.publisher == obj.publisher) or (obj in request.user.owned_books.all())):
+            if (obj.is_public()) \
+                    or request.user.is_staff\
+                    or ((request.user.profile.publisher == obj.publisher)
+                    or (obj in request.user.uploaded_books.all())\
+                    or (obj in request.user.authored_books.all())):
                 return True
             else:
                 return False
         return False
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Book.objects.all()
+        else:
+            return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
+
+
+    queryset = Book.objects.get_queryset()
     serializer_class =BookSerializer
-    filter_fields = ('title',)
+    filter_fields = ('isPublished','isVerified')
+    permission_classes = (BookViewPermission,)
+
 
     def perform_create(self, serializer):
         data = self.request.data
         post_type = data.__getitem__('type')
+        serializer.save(uploader=self.request.user)
         if post_type == 'write':
-            serializer.save(title = 'somewriter')
-        elif post_type == 'upload':
-            serializer.save(title = 'some_dumb_uploader')
+            serializer.save(author=self.request.user)
         else:
             serializer.save()
-     
-     
-       #serializer.save(owner=self.request.user)  
-
-       # permission_classes = (BookViewPermission,)
-
 
     def patch(self, request):
         data = request.data
@@ -98,12 +105,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    permission_classes = (IsStaffOrTargetUser,)    
-
-class AuthorViewSet(viewsets.ModelViewSet): #author list - authors can be created here
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsStaffOrTargetUser,)
 
 class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can be created here
     queryset = Publisher.objects.all()
@@ -114,3 +116,4 @@ class PublisherViewSet(viewsets.ModelViewSet): #publisher list - publishers can 
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

@@ -3,7 +3,7 @@ from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
-from .models import Book, Author, Publisher, Profile
+from .models import Book,Publisher, Profile
 from django.http import Http404
 import django_filters.rest_framework
 

@@ -1,14 +1,10 @@
-from .models import Book, Publisher, Author
+from .models import Book, Publisher
 from django.contrib.auth.models import User
 import factory
 import factory.fuzzy
-
+import datetime
 # factories.py
-class AuthorFactory(factory.DjangoModelFactory):
-    class Meta:
-        model= Author
 
-    name = factory.fuzzy.FuzzyText() #Faker
 class PublisherFactory(factory.DjangoModelFactory):
     class Meta:
         model = Publisher
@@ -17,34 +13,8 @@ class PublisherFactory(factory.DjangoModelFactory):
     name = factory.fuzzy.FuzzyText()
     address = factory.fuzzy.FuzzyText()
     city = factory.fuzzy.FuzzyText()
-
-class BookFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Book
-
-    title = factory.fuzzy.FuzzyText()
-    publisher = factory.SubFactory(PublisherFactory) #if it's one to many...pretty straightforward
-    @factory.post_generation
-    def author(self, create, extracted, **kwargs):
-        if not create:
-            # Simple build, do nothing.
-            return
-
-        if extracted:
-            # A list of groups were passed in, use them
-            for author in extracted:
-                self.author.add(author)
-                
-    @factory.post_generation
-    def users_who_favorite(self, create, extracted, **kwargs):
-        if not create:
-            # Simple build, do nothing.
-            return
-
-        if extracted:
-            # A list of groups were passed in, use them
-            for user in extracted:
-                self.users_who_favorite.add(user)    
+    
+    
     
 class UserFactory(factory.DjangoModelFactory):
     class Meta:
@@ -52,6 +22,8 @@ class UserFactory(factory.DjangoModelFactory):
     username = factory.fuzzy.FuzzyText()
     email = factory.LazyAttribute(lambda obj: '%s@example.com' % obj.username)
     password = factory.fuzzy.FuzzyText()
+    profile = factory.SubFactory(ProfileFactory)
+    
     @factory.post_generation
     def fav_books(self, create, count, **kwargs):
         if count is None:
@@ -62,5 +34,40 @@ class UserFactory(factory.DjangoModelFactory):
         if not create:
             # Fiddle with django internals so self.product_set.all() works with build()
             self._prefetched_objects_cache = {'fav_book': fav_books}  
+
+class ProfileFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Profile
+
+class BookFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Book
+
+    title = factory.fuzzy.FuzzyText()
+    publisher = factory.SubFactory(PublisherFactory) #if it's one to many
+    date = factory.fuzzy.FuzzyDate(datetime.date(2008, 1, 1))
+    pen_name = factory.fuzzy.FuzzyText()
+    uploader = factory.SubFactory(UserFactory)
+    author = factory.SubFactory(UserFactory)
+    uploader= factory.SubFactory(UserFactory)
+    isPublished = False
+    isVerified = False #default creation of a book
+    
+                
+    @factory.post_generation
+    def users_who_favorite(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for user in extracted:
+                self.users_who_favorite.add(user) 
+                
+
+    
+
+
      
     

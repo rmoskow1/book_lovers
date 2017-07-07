@@ -6,7 +6,7 @@ class Book(models.Model):
 
     title = models.CharField(max_length= 100)
 
-    pen_name = models.CharField(max_length=100, verbose_name='author name')
+    pen_name = models.CharField(max_length=100, verbose_name='author name', default = 'Bartholomew the Jew')
 
     publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher
 
@@ -21,9 +21,9 @@ class Book(models.Model):
 
     tags = models.ManyToManyField('Tag',related_name = 'tagged_books', blank = True)
 
-    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='uploaded_books')
+    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True,blank = True, related_name='uploaded_books')
 
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='authored_books')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank = True, related_name='authored_books')
 
     def __str__(self):
         return self.title
@@ -33,13 +33,6 @@ class Book(models.Model):
             return True
         return False
 
-
-class Author(models.Model):
-    # this class is being kept simple for this projects purposes. For other purposes, this field could be expanded to include other details
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
 
 
 class Publisher(models.Model):

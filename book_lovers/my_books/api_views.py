@@ -33,9 +33,19 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_fields = ('title',)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)  
-    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    permission_classes = (BookViewPermission,)
+        data = self.request.data
+        post_type = data.__getitem__('type')
+        if post_type == 'write':
+            serializer.save(title = 'somewriter')
+        elif post_type == 'upload':
+            serializer.save(title = 'some_dumb_uploader')
+        else:
+            serializer.save()
+     
+     
+       #serializer.save(owner=self.request.user)  
+
+       # permission_classes = (BookViewPermission,)
 
 
     def patch(self, request):
@@ -45,7 +55,18 @@ class BookViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(code=201, data=serializer.data)
-        return JsonResponse(code=400, data="wrong parameters")   
+        return JsonResponse(code=400, data="wrong parameters")  
+    
+    #def post(self):
+        #data = self.request.data
+        #type = data.__getitem__('type')
+        #if type == 'write':
+            #pass
+        #elif type == 'upload':
+            #self.perform_create()
+        #else:
+            #self.perform_create()
+        
       
 
 #display only the books with at least 2 users who favorite

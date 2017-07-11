@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from .models import Book, Author
+from .models import Book
 from django.db.models import Q
 
 
@@ -138,12 +138,7 @@ class BooksDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('books:list')
 
-class AuthorsCreateView(CreateView):
-    fields = ['name']
-    model = Author
 
-    def get_success_url(self):
-        return reverse('books:create')
 
     # def form_valid(self, form):
     #     messages.info(self.request, self.success_msg)

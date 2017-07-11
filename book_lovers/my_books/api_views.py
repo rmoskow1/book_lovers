@@ -3,7 +3,7 @@ from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
-from .models import Book, Author, Publisher, Profile
+from .models import Book, Publisher, Profile
 from django.http import Http404
 import django_filters.rest_framework
 
@@ -40,7 +40,7 @@ class BookViewSet(viewsets.ModelViewSet):
             return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
 
     queryset = Book.objects.get_queryset()
-    serializer_class =BookSerializer
+    serializer_class = BookSerializer
     filter_fields = ('isPublished','isVerified')
     permission_classes = (BookViewPermission,)
 

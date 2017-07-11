@@ -12,6 +12,8 @@ class Book(models.Model):
 
     date = models.DateField(blank=True, null=True)  # allows for unknown publishing date
 
+    text = models.TextField(null=True, blank=True)
+
     #instead of changing the user model, do this. Books can access the users who have favorited them, by Book.users_who_favorite. And Users can access all of the books they have favorited, by user.fav_books
     users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name = 'fav_books')
 
@@ -60,4 +62,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.__str__() + "'s profile"
-

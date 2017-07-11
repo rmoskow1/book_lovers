@@ -12,12 +12,13 @@ class PublisherSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
-    #owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
-    users_who_favorite =  serializers.StringRelatedField( read_only = True,many = True)
+
+    owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
+  #  author = AuthorSerializer(many=True, read_only=False)
+    users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','date','publisher','uploader','author','users_who_favorite')
-        #everything: fields = '__all__'
+        fields = ('id','title','pen_name','publisher','text','uploader','author','users_who_favorite')
 
 
 class UserSerializer(serializers.ModelSerializer):

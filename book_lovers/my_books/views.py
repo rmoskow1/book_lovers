@@ -139,5 +139,3 @@ class BooksDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('books:list')
 
 
-
-

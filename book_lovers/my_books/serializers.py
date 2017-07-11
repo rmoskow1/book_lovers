@@ -19,9 +19,10 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     tags = serializers.StringRelatedField(read_only = True, many = True)
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isVerified')
-    extra_kwargs = {
-        'isVerified':{'write_only':True}
+        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isVerified','isPublished')
+        extra_kwargs = {
+        'isVerified':{'write_only':True},
+        'isPublished':{'write_only':True}
         }
 
 class UserSerializer(serializers.ModelSerializer):

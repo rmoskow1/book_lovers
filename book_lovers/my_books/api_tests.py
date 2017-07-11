@@ -293,7 +293,7 @@ class AuthorProjectTests(TestCase):
         
         request = APIRequestFactory().get("")
         book.uploader = UserFactory() #book_uploader is manually set as the book's uploader
-        print("Uploader's books", book.uploader.uploaded_books.all())
+        book.uploader.uploaded_books.add(book) #book is added to uploaded_books of the user, as happens when a live request to server is made
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk=book.pk)#detail page of the not public book
         self.assertEqual(response.status_code, 200) #the book's uploader should be able to access this book detail page
@@ -319,7 +319,7 @@ class SerializerTests(TestCase):
     #test custom logic in the serializers
     def setUp(self):
         self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags','isVerified'] #all of the keys expected to be serialized
-        #isVerified and isPublished?
+        
         
     def test_book_serializer_fields(self):
         test_book = BookFactory()

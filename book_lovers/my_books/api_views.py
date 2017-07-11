@@ -22,16 +22,30 @@ class BookViewPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated():
-            if (obj.is_public()) \
-                    or request.user.is_staff\
-                    or ((request.user.profile.publisher == obj.publisher)
-                    or (obj in request.user.uploaded_books.all())\
-                    or (obj in request.user.authored_books.all())):
-                return True
-            else:
-                return False
+           
+            if request.method in permissions.SAFE_METHODS:
+ 
+                if (obj.is_public()) \
+                        or request.user.is_staff\
+                        or ((request.user.profile.publisher == obj.publisher)
+                        or (obj in request.user.uploaded_books.all())\
+                        or (obj in request.user.authored_books.all())):
+                    return True
+                else:
+                    return False
+            else: #editing permissions
+                if obj.is_public() == True:
+                    if request.user.is_staff:return True
+                    
+                else:
+                    if request.user.is_staff\
+                                            or ((request.user.profile.publisher == obj.publisher)
+                                            or (obj in request.user.uploaded_books.all())\
+                                            or (obj in request.user.authored_books.all())): return True                   
+            
         return False
 
+    
 class BookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -41,7 +55,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
 
     queryset = Book.objects.get_queryset()
-    serializer_class =BookSerializer
+    serializer_class = BookSerializer
     filter_fields = ('isPublished','isVerified')
     permission_classes = (BookViewPermission,)
 

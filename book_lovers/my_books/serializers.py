@@ -16,10 +16,13 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
   #  author = AuthorSerializer(many=True, read_only=False)
     users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
+    tags = serializers.StringRelatedField(read_only = True, many = True)
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','publisher','text','uploader','author','users_who_favorite')
-
+        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isVerified')
+    extra_kwargs = {
+        'isVerified':{'write_only':True}
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

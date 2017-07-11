@@ -53,8 +53,8 @@
       <file leaf-file-name="api_views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/my_books/api_views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="74" column="56" lean-forward="false" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
+            <state relative-caret-position="255">
+              <caret line="80" column="12" lean-forward="true" selection-start-line="80" selection-start-column="12" selection-end-line="80" selection-end-column="12" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -643,8 +643,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/my_books/api_views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="74" column="56" lean-forward="false" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
+        <state relative-caret-position="255">
+          <caret line="80" column="12" lean-forward="true" selection-start-line="80" selection-start-column="12" selection-end-line="80" selection-end-column="12" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>

@@ -5,16 +5,21 @@ from django.contrib.auth.hashers import make_password
 from django.db import models
 
 
+class PublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publisher
+        fields = '__all__'
+
+
 class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
+
     owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
   #  author = AuthorSerializer(many=True, read_only=False)
     users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
-
-
     class Meta:
         model = Book
         fields = ('id','title','pen_name','publisher','text','uploader','author','users_who_favorite')
-        #everything: fields = '__all__'
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,10 +38,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class PublisherSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Publisher
-        fields = '__all__'
 
 
 class ProfileSerializer(serializers.ModelSerializer):

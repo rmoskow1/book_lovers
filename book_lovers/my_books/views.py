@@ -139,10 +139,3 @@ class BooksDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('books:list')
 
 
-
-    # def form_valid(self, form):
-    #     messages.info(self.request, self.success_msg)
-    #     return super(BooksActionMixin, self).form_valid(form)
-
-
-

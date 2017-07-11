@@ -3,7 +3,7 @@ from rest_framework import viewsets,generics, permissions
 from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
-from .models import Book, Publisher, Profile
+from .models import Book,Publisher, Profile
 from django.http import Http404
 import django_filters.rest_framework
 
@@ -22,16 +22,30 @@ class BookViewPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated():
-            if (obj.is_public()) \
-                    or request.user.is_staff\
-                    or ((request.user.profile.publisher == obj.publisher)
-                    or (obj in request.user.uploaded_books.all())\
-                    or (obj in request.user.authored_books.all())):
-                return True
-            else:
-                return False
+           
+            if request.method in permissions.SAFE_METHODS:
+ 
+                if (obj.is_public()) \
+                        or request.user.is_staff\
+                        or ((request.user.profile.publisher == obj.publisher)
+                        or (obj in request.user.uploaded_books.all())\
+                        or (obj in request.user.authored_books.all())):
+                    return True
+                else:
+                    return False
+            else: #editing permissions
+                if obj.is_public() == True:
+                    if request.user.is_staff:return True
+                    
+                else:
+                    if request.user.is_staff\
+                                            or ((request.user.profile.publisher == obj.publisher)
+                                            or (obj in request.user.uploaded_books.all())\
+                                            or (obj in request.user.authored_books.all())): return True                   
+            
         return False
 
+    
 class BookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -39,10 +53,12 @@ class BookViewSet(viewsets.ModelViewSet):
         else:
             return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
 
+
     queryset = Book.objects.get_queryset()
     serializer_class = BookSerializer
     filter_fields = ('isPublished','isVerified')
     permission_classes = (BookViewPermission,)
+
 
     def perform_create(self, serializer):
         data = self.request.data
@@ -60,8 +76,9 @@ class BookViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(code=201, data=serializer.data)
-        return JsonResponse(code=400, data="wrong parameters")   
-      
+        return JsonResponse(code=400, data="wrong parameters")  
+
+            
 
 #display only the books with at least 2 users who favorite
 class PopularBookViewSet(viewsets.ModelViewSet):

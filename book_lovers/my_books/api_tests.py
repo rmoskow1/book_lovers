@@ -265,6 +265,7 @@ class AuthorProjectTests(TestCase):
     
         
     def test_not_public_get_permissions(self):
+        '''If the book is not public, admin user or uploader should be able to access the detail page; a regular user should not'''
         book = BookFactory()
         book.isPublished = False
         book.isVerified = False #book is not public

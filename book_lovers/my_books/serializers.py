@@ -22,7 +22,8 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isPublished')
         extra_kwargs = {
        # 'isVerified':{'write_only':True},
-        'isPublished':{'write_only':True}
+        'isPublished':{'write_only':True},
+        'text':{'write_only':'text'}
          }
 
 class BookAdminSerializer(BookSerializer):

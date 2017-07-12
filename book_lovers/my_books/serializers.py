@@ -23,7 +23,7 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
         extra_kwargs = {
        # 'isVerified':{'write_only':True},
         'isPublished':{'write_only':True},
-        'text':{'write_only':'text'}
+        'text':{'write_only':True}
          }
 
 class BookAdminSerializer(BookSerializer):

@@ -11,6 +11,8 @@ from .factories import UserFactory, BookFactory, ProfileFactory
 from django.forms.models import model_to_dict
 
 
+
+
 @unittest.skipIf(True,'Test from before model update')
 class BookViewPermissionTest(TestCase, BookViewPermission):
     def setUp(self):
@@ -274,54 +276,55 @@ class AuthorProjectTests(TestCase):
         
     def test_not_public_permissions(self):
         book = BookFactory()
-       # book.isPublished = True
-       # book.isVerified = True
-        self.assertIsNotNone(book.pk)
+        book.isPublished = False
+        book.isVerified = False #book is not public
+        self.assertIsNotNone(book.pk) #book WAS created
+        
         request = APIRequestFactory().get("")
         force_authenticate(request, user = self.the_user) #request with a regular - non admin user
         response = self.detail_view(request, pk = book.pk) #detail page of the not public book
-        self.assertEqual(response.status_code, 404) #the user should be able to access this book detail page FIRST
+        self.assertEqual(response.status_code, 404) #the user should not be able to access this not public book
+
         
-        
-        
+        request = APIRequestFactory().get("")
         force_authenticate(request, user = self.the_admin_user) #request with an admin user
         response = self.view(request,pk= book.pk) #detail page of the not public book
         self.assertEqual(response.status_code, 200) #the admin user should be able to access this book detail page
         
-        book_uploader = UserFactory()
-        book.uploader = book_uploader #book_uploader is manually set as the book's uploader
+        request = APIRequestFactory().get("")
+        book.uploader = UserFactory() #book_uploader is manually set as the book's uploader
+        book.uploader.uploaded_books.add(book) #book is added to uploaded_books of the user, as happens when a live request to server is made
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk=book.pk)#detail page of the not public book
         self.assertEqual(response.status_code, 200) #the book's uploader should be able to access this book detail page
         
     def test_is_verified_permissions(self):
         book = BookFactory()
-        request = APIRequestFactory().patch("",{'isVerified':True})
+        request = APIRequestFactory().patch("",{"isVerified":True})
         force_authenticate(request, user = self.the_user)
         response = self.view(request,pk = book.pk)
         self.assertEqual(response.status_code, 404) #a regular user should not be able to update is_verified to True
-
+        
         force_authenticate(request, user = self.the_admin_user)
         response = self.view(request, pk = book.pk)
         self.assertEqual(response.status_code, 200) #admin user should be able to patch is_verified to True
-
-        book_uploader = UserFactory()
-        book.uploader = book_uploader  # book_uploader is manually set as the book's uploader
+        
+        
+        book.uploader = UserFactory() 
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk = book.pk)
         self.assertEqual(response.status_code, 404) #the book's uploader should not be able to patch is_verified to True
-
-    # def can_edit_permissions(self):
-    #     book = BookFactory()
 
         
 class SerializerTests(TestCase):
     #test custom logic in the serializers
     def setUp(self):
-        self.book_keys = ['id','title','pen_name','date','publisher','author','uploader','users_who_favorite','tags'] #all of the keys expected to be serialized
-        #isVerified and isPublished?
-
+        self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags','isVerified'] #all of the keys expected to be serialized
+        
+        
     def test_book_serializer_fields(self):
         test_book = BookFactory()
         serializer = BookSerializer(test_book)
-        self.assertEqual(serializer.data.keys(),self.book_keys) #check that serializer contains all of the expected fields
+        self.assertCountEqual(serializer.data.keys(),self.book_keys) #check that serializer contains all of the expected fields 
+
+

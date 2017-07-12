@@ -15,6 +15,8 @@ class PublisherFactory(factory.DjangoModelFactory):
     name = factory.fuzzy.FuzzyText()
     address = factory.fuzzy.FuzzyText()
     city = factory.fuzzy.FuzzyText()
+  
+  
     
 class ProfileFactory(factory.DjangoModelFactory):
     class Meta:

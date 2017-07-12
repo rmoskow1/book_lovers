@@ -19,11 +19,16 @@ class BookSerializer(serializers.ModelSerializer): #we'll be converting somethin
     tags = serializers.StringRelatedField(read_only = True, many = True)
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isVerified','isPublished')
+        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isPublished')
         extra_kwargs = {
-        'isVerified':{'write_only':True},
+       # 'isVerified':{'write_only':True},
         'isPublished':{'write_only':True}
          }
+
+class BookAdminSerializer(BookSerializer):
+    '''different from BookSerializer in that it contains the field - 'isVerified', which only an admin has any access to'''
+    class Meta(BookSerializer.Meta):
+        fields = BookSerializer.Meta.fields + ('isVerified',)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

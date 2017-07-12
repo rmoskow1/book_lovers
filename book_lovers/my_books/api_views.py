@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework import viewsets,generics, permissions
-from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer
+from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer,  BookAdminSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
 from .models import Book,Publisher, Profile
@@ -52,10 +52,18 @@ class BookViewSet(viewsets.ModelViewSet):
             return Book.objects.all()
         else:
             return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
-
+   
+   
+    def get_serializer_class(self):
+        '''if the user is admin, use the BookAdminSerializer. For any other user, the base serializer'''
+        if self.request.user.is_staff:
+            return BookAdminSerializer
+        else: return BookSerializer
+   
+        
 
     queryset = Book.objects.get_queryset()
-    serializer_class = BookSerializer
+    
     filter_fields = ('isPublished','isVerified')
     permission_classes = (BookViewPermission,)
 
@@ -75,7 +83,7 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = BookSerializer(data=request.data, partial=True) # set partial=True to update a data partially
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(code=201, data=serializer.data)
+            return JsonResponse(code=202, data=serializer.data)
         return JsonResponse(code=400, data="wrong parameters")  
 
             

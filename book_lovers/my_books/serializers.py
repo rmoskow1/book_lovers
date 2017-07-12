@@ -29,6 +29,9 @@ class BookAdminSerializer(BookSerializer):
     '''different from BookSerializer in that it contains the field - 'isVerified', which only an admin has any access to'''
     class Meta(BookSerializer.Meta):
         fields = BookSerializer.Meta.fields + ('isVerified',)
+        extra_kwargs = {
+            'isPublished':{'write_only':False}
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -196,7 +196,7 @@ class UserAPIViewTest(TestCase):
 #testing for Author project
 class AuthorProjectTests(TestCase):
     def setUp(self):
-        self.view = BookViewSet.as_view({'get':'list','get':'retrieve','post':'create', 'patch':'partial_update'})
+        self.view = BookViewSet.as_view({'get':'list','get':'retrieve','post':'create', 'patch':'update'})
         self.detail_view = BookViewSet.as_view({'get':'retrieve'})
         self.the_user = UserFactory()
         self.the_user.is_staff = False #a regular user, not admin
@@ -219,10 +219,6 @@ class AuthorProjectTests(TestCase):
            "city": pub.city,
            "state_province": "",
            "country": ""   }
-    def user_to_dict(self,user):
-        return {"username":user.username,
-                "password":user.password,
-                "email":user.email}
 
     
     def test_upload_success(self):
@@ -268,7 +264,7 @@ class AuthorProjectTests(TestCase):
         self.assertEqual(len(self.the_user.uploaded_books.filter(title = book.title)),1) #this book was written by the user, so in authored_books, and uploaded by the user, so in uploaded_books
     
         
-    def test_not_public_permissions(self):
+    def test_not_public_get_permissions(self):
         book = BookFactory()
         book.isPublished = False
         book.isVerified = False #book is not public
@@ -279,7 +275,6 @@ class AuthorProjectTests(TestCase):
         response = self.detail_view(request, pk = book.pk) #detail page of the not public book
         self.assertEqual(response.status_code, 404) #the user should not be able to access this not public book
 
-        
         request = APIRequestFactory().get("")
         force_authenticate(request, user = self.the_admin_user) #request with an admin user
         response = self.view(request,pk= book.pk) #detail page of the not public book
@@ -293,21 +288,39 @@ class AuthorProjectTests(TestCase):
         self.assertEqual(response.status_code, 200) #the book's uploader should be able to access this book detail page
         
     def test_is_verified_permissions(self):
-        book = BookFactory()
-        request = APIRequestFactory().patch("",{"isVerified":True})
-        force_authenticate(request, user = self.the_user)
-        response = self.view(request,pk = book.pk)
-        self.assertEqual(response.status_code, 404) #a regular user should not be able to update is_verified to True
+        '''is verified can be changed only by an admin - not by the book's uploader/author'''
+        book = BookFactory() #by default, isPublic() is false
         
+        request = APIRequestFactory().patch("",{"isVerified":True})
         force_authenticate(request, user = self.the_admin_user)
         response = self.view(request, pk = book.pk)
-        self.assertEqual(response.status_code, 200) #admin user should be able to patch is_verified to True
+        self.assertTrue(book.isVerified) #admin user should be able to patch isVerified to True
         
-        
-        book.uploader = UserFactory() 
+        book = BookFactory() #by default, isPublic() is false
+        request = APIRequestFactory().patch("",{"isVerified":True})
+        book.uploader = UserFactory()
+        book.uploader.uploaded_books.add(book)
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk = book.pk)
-        self.assertEqual(response.status_code, 404) #the book's uploader should not be able to patch is_verified to True
+        self.assertFalse(book.isVerified)  #the book's uploader should not be able to patch isVerified to True
+        
+    
+    def test_is_published_permissions(self):
+        '''isPublished can be changed by the book's uploader/author, or by an admin user'''
+        book = BookFactory() #by default, isPublished is False
+        request = APIRequestFactory().patch("",{"isPublished":True})
+        force_authenticate(request, user = self.the_admin_user)
+        response = self.view(request, pk = book.pk)
+        self.assertTrue(book.isPublished) #admin user should be able to patch isPublished to True
+        
+        
+        book = BookFactory()
+        request = APIRequestFactory().patch("",{"isPublished":True})
+        book.uploader = UserFactory()
+        book.uploader.uploaded_books.add(book)
+        force_authenticate(request, user = book.uploader)
+        response = self.view(request, pk = book.pk)
+        self.assertTrue(book.isPublished) #the book's uploader should be able to patch isPublished to True        
 
     def test_object_modify_permissions(self):
         book = BookFactory()
@@ -334,12 +347,13 @@ class AuthorProjectTests(TestCase):
 class SerializerTests(TestCase):
     #test custom logic in the serializers
     def setUp(self):
-        self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags','isVerified'] #all of the keys expected to be serialized
-        
+        self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags'] #all of the keys expected to be serialized
+        self.book_keys_write_only = ['isPublished','isVerified']
         
     def test_book_serializer_fields(self):
         test_book = BookFactory()
         serializer = BookSerializer(test_book)
         self.assertCountEqual(serializer.data.keys(),self.book_keys) #check that serializer contains all of the expected fields 
-
+        for each in self.book_keys_write_only:
+            self.assertNotIn(each,serializer.data.keys()) #check that expected write only fields are not read
 

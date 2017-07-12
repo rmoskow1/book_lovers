@@ -94,7 +94,7 @@ class BookViewPermissionTest(TestCase, BookViewPermission):
         self.assertFalse(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
         self.assertFalse(BookViewPermission.has_object_permission(myView.request, myView.request, myView, up))
 
-@unittest.skipIf(True,"From before Author model removal")
+@unittest.skipIf(False,"From before Author model removal")
 class UserAPIViewTest(TestCase):
     '''test the user view set creations, permissions, and functionality'''
 
@@ -109,7 +109,6 @@ class UserAPIViewTest(TestCase):
             'email': 'b@gmail.com',
             'password': 'my_password',
             'fav_books': [],
-            'owned_books': []
         }
         newUser = UserSerializer().create(data)
         self.assertNotEqual(newUser.password,
@@ -182,7 +181,8 @@ class UserAPIViewTest(TestCase):
             'email': 'user@example.com',
             'password': 'secretx',
             'fav_books': [],
-            'owned_books': []
+            'uploaded_books': [],
+            'authored_books': [],
         }
         request = APIRequestFactory().post("", user_data, format='json')
         force_authenticate(request, user=admin_user)
@@ -223,13 +223,7 @@ class AuthorProjectTests(TestCase):
         return {"username":user.username,
                 "password":user.password,
                 "email":user.email}
-     
-    
-    def test_author_model_removed(self):
-    #Author model removed, should get an error if attempted to create one
-        with self.assertRaises(Exception):
-            new_author = Author.objects.create(name = "Failed Author")
-    
+
     
     def test_upload_success(self):
         #when a post request is made to the book view with upload parameter, confirm that a book is created
@@ -315,7 +309,28 @@ class AuthorProjectTests(TestCase):
         response = self.view(request, pk = book.pk)
         self.assertEqual(response.status_code, 404) #the book's uploader should not be able to patch is_verified to True
 
-        
+    def test_object_modify_permissions(self):
+        book = BookFactory()
+        book.isPublished = True
+        book.isVerified = True
+        request1 = APIRequestFactory().patch("", {"title":"Test"})
+        force_authenticate(request1,user=self.the_user)
+        response = self.view(request1, pk=book.pk)
+        self.assertFalse(BookViewPermission.has_object_permission(request1, request1, self.view, book))
+
+        request2 = APIRequestFactory().patch("", {"title": "Test"})
+        book.uploader = UserFactory()
+        book.uploader.uploaded_books.add(book)
+        force_authenticate(request2,user=book.uploader)
+        response = self.view(request2, pk=book.pk)
+        self.assertFalse(BookViewPermission.has_object_permission(request2, request2, self.view, book))
+
+        request3 = APIRequestFactory().patch("", {"title": "Test"})
+        force_authenticate(request3,user=self.the_admin_user)
+        response = self.view(request3, pk=book.pk)
+        self.assertTrue(BookViewPermission.has_object_permission(request3, request3, self.view, book))
+
+
 class SerializerTests(TestCase):
     #test custom logic in the serializers
     def setUp(self):

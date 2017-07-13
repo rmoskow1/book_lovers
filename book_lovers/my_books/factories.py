@@ -15,8 +15,7 @@ class PublisherFactory(factory.DjangoModelFactory):
     name = factory.fuzzy.FuzzyText()
     address = factory.fuzzy.FuzzyText()
     city = factory.fuzzy.FuzzyText()
-  
-  
+
     
 class ProfileFactory(factory.DjangoModelFactory):
     class Meta:
@@ -28,18 +27,16 @@ class ProfileFactory(factory.DjangoModelFactory):
     user = factory.SubFactory("my_books.factories.UserFactory", profile=None)
 
 
-    
 class UserFactory(factory.DjangoModelFactory):
     class Meta:
-        model= User
+        model = User
     username = factory.fuzzy.FuzzyText()
     email = factory.LazyAttribute(lambda obj: '%s@example.com' % obj.username)
     password = factory.fuzzy.FuzzyText()
-     # We pass in 'user' to link the generated Profile to our just-generated User
+    # We pass in 'user' to link the generated Profile to our just-generated User
     # This will call ProfileFactory(user=our_new_user), thus skipping the SubFactory.
     profile = factory.RelatedFactory("my_books.factories.ProfileFactory", 'user')
     is_staff = False
-
 
     '''@classmethod
     def with_fav_books(cls, numberOfBooks=4, *args, **kwargs):
@@ -49,7 +46,6 @@ class UserFactory(factory.DjangoModelFactory):
 
         return User'''
     
-
 
 class BookFactory(factory.DjangoModelFactory):
     class Meta:

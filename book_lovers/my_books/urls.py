@@ -12,9 +12,6 @@ urlpatterns = [
     url(r'^update/(?P<pk>\d+)/$', views.BooksUpdateView.as_view(), name='update'),
     url(r'^delete/(?P<pk>\d+)/$', views.BooksDeleteView.as_view(), name='delete'),
     url(r'^favorites/$',views.FavoritesListView.as_view(),name = 'favorites'),
-
-   # url(r'^favorites_update/$',views.fav_updateView,name = 'favorites_update'),
-
     url(r'^login/$', auth_views.LoginView.as_view(template_name='registration/login.html')),
     url(r'^logout/$', auth_views.logout,{"next_page":'books:list'},name = 'logout'),
     

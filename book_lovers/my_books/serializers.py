@@ -11,42 +11,45 @@ class PublisherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BookSerializer(serializers.ModelSerializer): #we'll be converting something to JSON based on the model
+class BookSerializer(serializers.ModelSerializer):  # we'll be converting something to JSON based on the model
 
-    owner = models.ForeignKey('auth.User', related_name='owned_books',  on_delete = models.CASCADE)
-  #  author = AuthorSerializer(many=True, read_only=False)
-    users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
-    tags = serializers.StringRelatedField(read_only = True, many = True)
+    owner = models.ForeignKey('auth.User', related_name='owned_books', on_delete=models.CASCADE)
+    # author = AuthorSerializer(many=True, read_only=False)
+    users_who_favorite = serializers.StringRelatedField(read_only=True, many=True)
+    tags = serializers.StringRelatedField(read_only=True, many=True)
+
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isPublished')
+        fields = ('id', 'title', 'pen_name', 'date', 'publisher', 'text', 'uploader',
+                  'author', 'users_who_favorite', 'tags', 'isPublished')
         extra_kwargs = {
-       # 'isVerified':{'write_only':True},
-        'isPublished':{'write_only':True}
+            # 'isVerified':{'write_only':True},
+            'isPublished': {'write_only': True}
          }
 
+
 class BookAdminSerializer(BookSerializer):
-    '''different from BookSerializer in that it contains the field - 'isVerified', which only an admin has any access to'''
+    # different from BookSerializer in that it contains the field - 'isVerified', which only an admin has any access to
+
     class Meta(BookSerializer.Meta):
         fields = BookSerializer.Meta.fields + ('isVerified',)
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username','email', 'uploaded_books', 'authored_books', 'fav_books','password')
+        fields = ('username', 'email', 'uploaded_books', 'authored_books', 'fav_books', 'password')
         extra_kwargs = {
-            'password': {'write_only':True}
+            'password': {'write_only': True}
             }
    
     def create(self, validated_data):
-        #create a new user with a properly hashed password
-        #using the default create would produce a user without an unhashed password
+        # create a new user with a properly hashed password
+        # using the default create would produce a user without an unhashed password
         user = super().create(validated_data)
         user.set_password(validated_data['password']) 
         user.save()
         return user
-
-
 
 
 class ProfileSerializer(serializers.ModelSerializer):

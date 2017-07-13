@@ -4,9 +4,9 @@ from django.conf import settings
 
 class Book(models.Model):
 
-    title = models.CharField(max_length= 100)
+    title = models.CharField(max_length=100)
 
-    pen_name = models.CharField(max_length=100, verbose_name='author name', default = 'Bartholomew the Jew')
+    pen_name = models.CharField(max_length=100, verbose_name='author name', default='Bartholomew the Jew')
 
     publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher
 
@@ -14,18 +14,20 @@ class Book(models.Model):
 
     text = models.TextField(null=True, blank=True)
 
-    #instead of changing the user model, do this. Books can access the users who have favorited them, by Book.users_who_favorite. And Users can access all of the books they have favorited, by user.fav_books
-    users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name = 'fav_books')
+    # instead of changing the user model, do this.
+    # Books can access the users who have favorited them, by Book.users_who_favorite.
+    # And Users can access all of the books they have favorited, by user.fav_books
+    users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='fav_books')
 
     isPublished = models.BooleanField(default=False)
 
     isVerified = models.BooleanField(default=False)
 
-    tags = models.ManyToManyField('Tag',related_name = 'tagged_books', blank = True)
+    tags = models.ManyToManyField('Tag', related_name='tagged_books', blank=True)
 
-    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True,blank = True, related_name='uploaded_books')
+    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='uploaded_books')
 
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank = True, related_name='authored_books')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='authored_books')
 
     def __str__(self):
         return self.title
@@ -34,7 +36,6 @@ class Book(models.Model):
         if self.isPublished and self.isVerified:
             return True
         return False
-
 
 
 class Publisher(models.Model):
@@ -50,7 +51,7 @@ class Publisher(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length = 50)
+    name = models.CharField(max_length=50)
     
     def __str__(self):
         return self.name

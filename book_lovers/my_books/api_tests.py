@@ -3,7 +3,7 @@ from .api_views import BookViewPermission, BookViewSet, UserViewSet, PublisherVi
 from my_books.models import Profile, Book, Publisher
 from django.contrib.auth.models import User, AnonymousUser
 from django.test import TestCase, mock
-from .serializers import UserSerializer,BookSerializer, PublisherSerializer
+from .serializers import UserSerializer, BookSerializer, PublisherSerializer
 import unittest
 from django.contrib.auth.hashers import is_password_usable, check_password
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient
@@ -11,9 +11,7 @@ from .factories import UserFactory, BookFactory, ProfileFactory
 from django.forms.models import model_to_dict
 
 
-
-
-@unittest.skipIf(True,'Test from before model update')
+@unittest.skipIf(True, 'Test from before model update')
 class BookViewPermissionTest(TestCase, BookViewPermission):
     def setUp(self):
         publisher = Publisher.objects.create(name='Apress')
@@ -23,7 +21,6 @@ class BookViewPermissionTest(TestCase, BookViewPermission):
         up = Book.objects.create(title="Unpublished", pen_name='Bob', publisher=publisher, isPublished=False)
         pu.save()
         up.save()
-
 
     @mock.patch('requests.get')
     def test_permissions(self, mockget):
@@ -47,57 +44,58 @@ class BookViewPermissionTest(TestCase, BookViewPermission):
         user1.uploaded_books.add(pu)
         user3.uploaded_books.add(up)
 
-        myView = BookViewSet
-        myView.request = mockget.requests.get
+        myview = BookViewSet
+        myview.request = mockget.requests.get
 
         # TEST 1: test if the user can access the Book list page
         # TEST 2: test if the user can access Book 1
         # TEST 3: test if the user can access Book 2
 
-        myView.request.user = user1
+        myview.request.user = user1
 
         # yes - user is authenticated
-        self.assertTrue(BookViewPermission.has_permission(myView.request, myView.request, myView))
+        self.assertTrue(BookViewPermission.has_permission(myview.request, myview.request, myview))
 
         # yes - book is published
-        self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
+        # self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
 
         # no - book is unpublished, and user doesn't work for publisher or own the book
-        self.assertFalse(BookViewPermission.has_object_permission(myView.request, myView.request, myView, up))
+        self.assertFalse(BookViewPermission.has_object_permission(myview.request, myview.request, myview, up))
 
-        myView.request.user = user2
+        myview.request.user = user2
 
         # yes - user is authenticated
-        self.assertTrue(BookViewPermission.has_permission(myView.request, myView.request, myView))
+        self.assertTrue(BookViewPermission.has_permission(myview.request, myview.request, myview))
 
         # yes - book is published
-        self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
+        self.assertTrue(BookViewPermission.has_object_permission(myview.request, myview.request, myview, pu))
 
         # yes - user works for the publisher
-        self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, up))
+        self.assertTrue(BookViewPermission.has_object_permission(myview.request, myview.request, myview, up))
 
-        myView.request.user = user3
+        myview.request.user = user3
 
         # yes - user is authenticated
-        self.assertTrue(BookViewPermission.has_permission(myView.request, myView.request, myView))
+        self.assertTrue(BookViewPermission.has_permission(myview.request, myview.request, myview))
 
         # yes - book is published
-        self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
+        self.assertTrue(BookViewPermission.has_object_permission(myview.request, myview.request, myview, pu))
 
         # yes - user owns the book
-        self.assertTrue(BookViewPermission.has_object_permission(myView.request, myView.request, myView, up))
+        self.assertTrue(BookViewPermission.has_object_permission(myview.request, myview.request, myview, up))
 
-        myView.request.user = user4
+        myview.request.user = user4
 
         # NO to all - user is not authenticated
-        self.assertFalse(BookViewPermission.has_permission(myView.request, myView.request, myView))
-        self.assertFalse(BookViewPermission.has_object_permission(myView.request, myView.request, myView, pu))
-        self.assertFalse(BookViewPermission.has_object_permission(myView.request, myView.request, myView, up))
+        self.assertFalse(BookViewPermission.has_permission(myview.request, myview.request, myview))
+        self.assertFalse(BookViewPermission.has_object_permission(myview.request, myview.request, myview, pu))
+        self.assertFalse(BookViewPermission.has_object_permission(myview.request, myview.request, myview, up))
 
-@unittest.skipIf(False,"From before Author model removal")
+
+@unittest.skipIf(False, "From before Author model removal")
 class UserAPIViewTest(TestCase):
-    '''test the user view set creations, permissions, and functionality'''
 
+    # test the user view set creations, permissions, and functionality
     def setUp(self):
         self.detail_view = UserViewSet.as_view({'get': 'retrieve'})
         self.list_view = UserViewSet.as_view({'get': 'list', 'post': 'create'})
@@ -110,20 +108,24 @@ class UserAPIViewTest(TestCase):
             'password': 'my_password',
             'fav_books': [],
         }
-        newUser = UserSerializer().create(data)
-        self.assertNotEqual(newUser.password,
+
+        newuser = UserSerializer().create(data)
+        self.assertNotEqual(newuser.password,
                             data.get('password'))  # the password input is not saved as it's original string
-        self.assertIsNotNone(newUser.password)  # user's password is not none
-        self.assertTrue(is_password_usable(newUser.password))  # checks that a password appears hashed
-        self.assertTrue(check_password(data.get('password'),
-                                       newUser.password))  # confirms that the second param is a proper hashing of the first
+        self.assertIsNotNone(newuser.password)  # user's password is not none
+        self.assertTrue(is_password_usable(newuser.password))  # checks that a password appears hashed
+        self.assertTrue(check_password(data.get('password'), newuser.password
+                                       ))  # confirms that the second param is a proper hashing of the first
 
     def test_detail_authenticate(self):
-        '''user's detail page should not be available unless user is authenticated '''
+
+        # user's detail page should not be available unless user is authenticated
         request = APIRequestFactory().get("")
         bob_the_user = User.objects.create(username="bob")
+
+        # user here is not authenticated - so even their own detail page they shouldn't be able to access
         response = self.detail_view(request,
-                                    pk=bob_the_user.pk)  # user here is not authenticated - so even their own detail page they shouldn't be able to access
+                                    pk=bob_the_user.pk)
         self.assertNotEqual(response.status_code, 200)
 
         force_authenticate(request, user=bob_the_user)  # now, force user authentication
@@ -131,7 +133,8 @@ class UserAPIViewTest(TestCase):
         self.assertEqual(response.status_code, 200)  # usr should be able to access their own detail page
 
     def test_detail_of_user(self):
-        '''test if a user can access their own detail page, but not another'''
+
+        # test if a user can access their own detail page, but not another
         request = APIRequestFactory().get("")
         this_user = UserFactory()
         another_user = UserFactory()
@@ -145,7 +148,8 @@ class UserAPIViewTest(TestCase):
         self.assertEqual(response.status_code, 200)  # this_user SHOULD be able to access the this_user detail page
 
     def test_admin(self):
-        '''test if an admin can access another user's detail page'''
+
+        # test if an admin can access another user's detail page
         admin_user = UserFactory()
         admin_user.is_staff = True  # admin_user has admin permissions now
         non_admin_user = UserFactory()
@@ -173,7 +177,8 @@ class UserAPIViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create(self):
-        '''test if an admin user can create a new user and add it to the database with the post request'''
+
+        # test if an admin user can create a new user and add it to the database with the post request
         admin_user = UserFactory()
         admin_user.is_staff = True  # is an admin
         user_data = {  # this data will be passed in for the post request
@@ -187,173 +192,180 @@ class UserAPIViewTest(TestCase):
         request = APIRequestFactory().post("", user_data, format='json')
         force_authenticate(request, user=admin_user)
         response = self.list_view(request)
-        self.assertEqual(response.status_code, 201) #201 status code -- means an object was created
-        self.assertEqual(len(User.objects.all()),2) #there should now be 2 users - admin_user and this_user
-        self.assertEqual(len(User.objects.filter(username = 'this_user')),1) #there is now exactly one user, by the name of this_user
-        
+        self.assertEqual(response.status_code, 201)  # 201 status code -- means an object was created
+        self.assertEqual(len(User.objects.all()), 2)  # there should now be 2 users - admin_user and this_user
+        self.assertEqual(len(User.objects.filter
+                             (username='this_user')), 1)  # there is now exactly one user, by the name of this_user
         
 
-#testing for Author project
+# testing for Author project
 class AuthorProjectTests(TestCase):
     def setUp(self):
-        self.view = BookViewSet.as_view({'get':'list','get':'retrieve','post':'create', 'patch':'update'})
-        self.detail_view = BookViewSet.as_view({'get':'retrieve'})
+        self.view = BookViewSet.as_view({'get': 'list', 'get': 'retrieve', 'post': 'create', 'patch': 'update'})
+        self.detail_view = BookViewSet.as_view({'get': 'retrieve'})
         self.the_user = UserFactory()
-        self.the_user.is_staff = False #a regular user, not admin
+        self.the_user.is_staff = False  # a regular user, not admin
         
         self.the_admin_user = UserFactory()
-        self.the_admin_user.is_staff= True #an admin user
+        self.the_admin_user.is_staff = True  # an admin user
         
-    def to_dict(self,book):
-        return {"title":book.title,
-                "pen_name":book.pen_name,
+    def to_dict(self, book):
+        return {"title": book.title,
+                "pen_name": book.pen_name,
                 "publisher": book.publisher.pk,
-               # "uploader":book.uploader.pk,
-              #  "author":book.author.pk,
+                # "uploader": book.uploader.pk,
+                # "author": book.author.pk,
                 "users_who_favorite": [],
-                "type":"upload"
+                "type": "upload"
                 }
-    def pub_to_dict(self,pub):
-        return { "name": pub.name,
-           "address": pub.address,
-           "city": pub.city,
-           "state_province": "",
-           "country": ""   }
 
+    def pub_to_dict(self, pub):
+        return {"name": pub.name,
+                "address": pub.address,
+                "city": pub.city,
+                "state_province": "",
+                "country": ""}
     
     def test_upload_success(self):
-        #when a post request is made to the book view with upload parameter, confirm that a book is created
-        book = BookFactory.build() #book is built but not saved (without a proper post, will not be found in the database)
+        # when a post request is made to the book view with upload parameter, confirm that a book is created
+        book = BookFactory.build()  # book is built but not saved (without a proper post, won't be found in database)
         book_data = self.to_dict(book)
-        request = APIRequestFactory().post("", book_data,format= "json") #submit a post request with this data, in JSON form
-        force_authenticate(request,user = self.the_user) #authenticated user
+        request = APIRequestFactory().post("", book_data, format="json")  # submit a post with this data, in JSON form
+        force_authenticate(request, user=self.the_user)  # authenticated user
         response = self.view(request)
-        self.assertEqual(response.status_code, 201) #response should be 201- an object was created 
-        self.assertEqual(len(Book.objects.filter(title = book.title)),1) #there should be one book, with the title being book.title
+        self.assertEqual(response.status_code, 201)  # response should be 201- an object was created
+        self.assertEqual(len(Book.objects.filter(title=book.title)),
+                         1)  # there should be one book, with the title being book.title
    
     def test_write_success(self):
-        #when a post request is made to the book view with write parameter, confirm that a book is created
+        # when a post request is made to the book view with write parameter, confirm that a book is created
         book = BookFactory.build()
         book_data = self.to_dict(book)
         book_data["type"] = "write"
-        request = APIRequestFactory().post("", book_data,format = "json") #submit a post request with this data, in JSON form 
-        force_authenticate(request, user = self.the_user) #authenticated user
+        request = APIRequestFactory().post("", book_data,
+                                           format="json")  # submit a post request with this data, in JSON form
+        force_authenticate(request, user=self.the_user)  # authenticated user
         response = self.view(request)
-        self.assertEqual(response.status_code, 201)#response should be 201 status - an object was created
-        self.assertEqual(len(Book.objects.filter(title = book.title)),1) #there should be one book, with the title being book.title
+        self.assertEqual(response.status_code, 201)  # response should be 201 status - an object was created
+        self.assertEqual(len(Book.objects.filter(title=book.title)),
+                         1)  # there should be one book, with the title being book.title
     
     def test_in_uploaded_books(self):
-        #test that a book that's uploaded is added to user's uploaded_books and NOT to authored_books
+        # test that a book that's uploaded is added to user's uploaded_books and NOT to authored_books
         book = BookFactory.build()
         book_data = self.to_dict(book)
-        request = APIRequestFactory().post("",book_data, format = "json")
-        force_authenticate(request, user = self.the_user)
+        request = APIRequestFactory().post("", book_data, format="json")
+        force_authenticate(request, user=self.the_user)
         response = self.view(request)     
-        self.assertEqual(len(self.the_user.authored_books.filter(title = book.title)), 0) #this was uploaded, so there should not be a book of this pk in authored_books
-        self.assertEqual(len(self.the_user.uploaded_books.filter(title = book.title)), 1) #should be 1 book, of this pk in the uploaded_books
+        self.assertEqual(len(self.the_user.authored_books.filter(title=book.title)),
+                         0)  # this was uploaded, so there should not be a book of this pk in authored_books
+        self.assertEqual(len(self.the_user.uploaded_books.filter(title=book.title)),
+                         1)  # should be 1 book, of this pk in the uploaded_books
     
     def test_in_uploaded_and_authored_books(self):
-        #test that a book that's written is added to user's uploaded_books and to authored_books
+        # test that a book that's written is added to user's uploaded_books and to authored_books
         book = BookFactory.build()
         book_data = self.to_dict(book)
         book_data["type"] = 'write'
-        request = APIRequestFactory().post("",book_data, format = 'json')
-        force_authenticate(request, user = self.the_user)
+        request = APIRequestFactory().post("", book_data, format='json')
+        force_authenticate(request, user=self.the_user)
         response = self.view(request)
-        self.assertEqual(len(self.the_user.authored_books.filter(title = book.title)),1)
-        self.assertEqual(len(self.the_user.uploaded_books.filter(title = book.title)),1) #this book was written by the user, so in authored_books, and uploaded by the user, so in uploaded_books
-    
+        self.assertEqual(len(self.the_user.authored_books.filter(title=book.title)), 1)
+
+        # this book was written by the user, so in authored_books, and uploaded by the user, so in uploaded_books
+        self.assertEqual(len(self.the_user.uploaded_books.filter(title=book.title)), 1)
         
     def test_not_public_get_permissions(self):
         book = BookFactory()
         book.isPublished = False
-        book.isVerified = False #book is not public
-        self.assertIsNotNone(book.pk) #book WAS created
+        book.isVerified = False  # book is not public
+        self.assertIsNotNone(book.pk)  # book WAS created
         
         request = APIRequestFactory().get("")
-        force_authenticate(request, user = self.the_user) #request with a regular - non admin user
-        response = self.detail_view(request, pk = book.pk) #detail page of the not public book
-        self.assertEqual(response.status_code, 404) #the user should not be able to access this not public book
+        force_authenticate(request, user=self.the_user)  # request with a regular - non admin user
+        response = self.detail_view(request, pk=book.pk)  # detail page of the not public book
+        self.assertEqual(response.status_code, 404)  # the user should not be able to access this not public book
 
         request = APIRequestFactory().get("")
-        force_authenticate(request, user = self.the_admin_user) #request with an admin user
-        response = self.view(request,pk= book.pk) #detail page of the not public book
-        self.assertEqual(response.status_code, 200) #the admin user should be able to access this book detail page
+        force_authenticate(request, user=self.the_admin_user)  # request with an admin user
+        response = self.view(request, pk=book.pk)  # detail page of the not public book
+        self.assertEqual(response.status_code, 200)  # the admin user should be able to access this book detail page
         
         request = APIRequestFactory().get("")
-        book.uploader = UserFactory() #book_uploader is manually set as the book's uploader
-        book.uploader.uploaded_books.add(book) #book is added to uploaded_books of the user, as happens when a live request to server is made
-        force_authenticate(request, user = book.uploader)
-        response = self.view(request, pk=book.pk)#detail page of the not public book
-        self.assertEqual(response.status_code, 200) #the book's uploader should be able to access this book detail page
+        book.uploader = UserFactory()  # book_uploader is manually set as the book's uploader
+
+        # book is added to uploaded_books of the user, as happens when a live request to server is made
+        book.uploader.uploaded_books.add(book)
+        force_authenticate(request, user=book.uploader)
+        response = self.view(request, pk=book.pk)  # detail page of the not public book
+        self.assertEqual(response.status_code, 200)  # book's uploader should be able to access this book detail page
         
     def test_is_verified_permissions(self):
-        '''is verified can be changed only by an admin - not by the book's uploader/author'''
-        book = BookFactory() #by default, isPublic() is false
+        # is verified can be changed only by an admin - not by the book's uploader/author
+        book = BookFactory()  # by default, isPublic() is false
         
-        request = APIRequestFactory().patch("",{"isVerified":True})
-        force_authenticate(request, user = self.the_admin_user)
-        response = self.view(request, pk = book.pk)
-        self.assertTrue(book.isVerified) #admin user should be able to patch isVerified to True
+        request = APIRequestFactory().patch("", {"isVerified": True})
+        force_authenticate(request, user=self.the_admin_user)
+        response = self.view(request, pk=book.pk)
+        self.assertEqual(response.data, 'bob')
+        self.assertTrue(book.isVerified)  # admin user should be able to patch isVerified to True
         
-        book = BookFactory() #by default, isPublic() is false
-        request = APIRequestFactory().patch("",{"isVerified":True})
+        book = BookFactory()  # by default, isPublic() is false
+        request = APIRequestFactory().patch("", {"isVerified": True})
         book.uploader = UserFactory()
         book.uploader.uploaded_books.add(book)
-        force_authenticate(request, user = book.uploader)
-        response = self.view(request, pk = book.pk)
-        self.assertFalse(book.isVerified)  #the book's uploader should not be able to patch isVerified to True
-        
+        force_authenticate(request, user=book.uploader)
+        response = self.view(request, pk=book.pk)
+        self.assertFalse(book.isVerified)  # the book's uploader should not be able to patch isVerified to True
     
     def test_is_published_permissions(self):
-        '''isPublished can be changed by the book's uploader/author, or by an admin user'''
-        book = BookFactory() #by default, isPublished is False
-        request = APIRequestFactory().patch("",{"isPublished":True})
-        force_authenticate(request, user = self.the_admin_user)
-        response = self.view(request, pk = book.pk)
-        self.assertTrue(book.isPublished) #admin user should be able to patch isPublished to True
-        
-        
+        # isPublished can be changed by the book's uploader/author, or by an admin user
+        book = BookFactory()  # by default, isPublished is False
+        request = APIRequestFactory().patch("", {"isPublished": True})
+        force_authenticate(request, user=self.the_admin_user)
+        response = self.view(request, pk=book.pk)
+        self.assertTrue(book.isPublished)  # admin user should be able to patch isPublished to True
+
         book = BookFactory()
-        request = APIRequestFactory().patch("",{"isPublished":True})
+        request = APIRequestFactory().patch("", {"isPublished": True})
         book.uploader = UserFactory()
         book.uploader.uploaded_books.add(book)
-        force_authenticate(request, user = book.uploader)
-        response = self.view(request, pk = book.pk)
-        self.assertTrue(book.isPublished) #the book's uploader should be able to patch isPublished to True        
+        force_authenticate(request, user=book.uploader)
+        response = self.view(request, pk=book.pk)
+        self.assertTrue(book.isPublished)  # the book's uploader should be able to patch isPublished to True
 
     def test_object_modify_permissions(self):
         book = BookFactory()
         book.isPublished = True
         book.isVerified = True
-        request1 = APIRequestFactory().patch("", {"title":"Test"})
-        force_authenticate(request1,user=self.the_user)
+        request1 = APIRequestFactory().patch("", {"title": "Test"})
+        force_authenticate(request1, user=self.the_user)
         response = self.view(request1, pk=book.pk)
         self.assertFalse(BookViewPermission.has_object_permission(request1, request1, self.view, book))
 
         request2 = APIRequestFactory().patch("", {"title": "Test"})
         book.uploader = UserFactory()
         book.uploader.uploaded_books.add(book)
-        force_authenticate(request2,user=book.uploader)
+        force_authenticate(request2, user=book.uploader)
         response = self.view(request2, pk=book.pk)
         self.assertFalse(BookViewPermission.has_object_permission(request2, request2, self.view, book))
 
         request3 = APIRequestFactory().patch("", {"title": "Test"})
-        force_authenticate(request3,user=self.the_admin_user)
+        force_authenticate(request3, user=self.the_admin_user)
         response = self.view(request3, pk=book.pk)
         self.assertTrue(BookViewPermission.has_object_permission(request3, request3, self.view, book))
 
 
 class SerializerTests(TestCase):
-    #test custom logic in the serializers
+    # test custom logic in the serializers
     def setUp(self):
-        self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags'] #all of the keys expected to be serialized
-        self.book_keys_write_only = ['isPublished','isVerified']
+        self.book_keys = ['id', 'title', 'pen_name', 'date', 'publisher', 'author', 'text', 'uploader',
+                          'users_who_favorite', 'tags']  # all of the keys expected to be serialized
+        self.book_keys_write_only = ['isPublished', 'isVerified']
         
     def test_book_serializer_fields(self):
         test_book = BookFactory()
         serializer = BookSerializer(test_book)
-        self.assertCountEqual(serializer.data.keys(),self.book_keys) #check that serializer contains all of the expected fields 
+        self.assertCountEqual(serializer.data.keys(), self.book_keys)  # check that serializer contains expected fields
         for each in self.book_keys_write_only:
-            self.assertNotIn(each,serializer.data.keys()) #check that expected write only fields are not read
-
+            self.assertNotIn(each, serializer.data.keys())  # check that expected write only fields are not read

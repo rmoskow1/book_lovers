@@ -12,7 +12,6 @@ from django.forms.models import model_to_dict
 
 
 
-
 @unittest.skipIf(True,'Test from before model update')
 class BookViewPermissionTest(TestCase, BookViewPermission):
     def setUp(self):
@@ -115,21 +114,19 @@ class UserAPIViewTest(TestCase):
                             data.get('password'))  # the password input is not saved as it's original string
         self.assertIsNotNone(newUser.password)  # user's password is not none
         self.assertTrue(is_password_usable(newUser.password))  # checks that a password appears hashed
-        self.assertTrue(check_password(data.get('password'),
-                                       newUser.password))  # confirms that the second param is a proper hashing of the first
-
+        self.assertTrue(check_password(data.get('password'), newUser.password))  # confirms that the second param is a proper hashing of the first
+   
     def test_detail_authenticate(self):
         '''user's detail page should not be available unless user is authenticated '''
         request = APIRequestFactory().get("")
         bob_the_user = User.objects.create(username="bob")
-        response = self.detail_view(request,
-                                    pk=bob_the_user.pk)  # user here is not authenticated - so even their own detail page they shouldn't be able to access
+        response = self.detail_view(request,pk=bob_the_user.pk)  # user here is not authenticated - so even their own detail page they shouldn't be able to access
         self.assertNotEqual(response.status_code, 200)
 
         force_authenticate(request, user=bob_the_user)  # now, force user authentication
         response = self.detail_view(request, pk=bob_the_user.pk)
         self.assertEqual(response.status_code, 200)  # usr should be able to access their own detail page
-
+    
     def test_detail_of_user(self):
         '''test if a user can access their own detail page, but not another'''
         request = APIRequestFactory().get("")
@@ -143,7 +140,7 @@ class UserAPIViewTest(TestCase):
 
         response = self.detail_view(request, pk=this_user.pk)
         self.assertEqual(response.status_code, 200)  # this_user SHOULD be able to access the this_user detail page
-
+    
     def test_admin(self):
         '''test if an admin can access another user's detail page'''
         admin_user = UserFactory()
@@ -152,13 +149,12 @@ class UserAPIViewTest(TestCase):
         another_user = UserFactory()  # another non-admin user, for testing pk
         request = APIRequestFactory().get("")
         force_authenticate(request, user=non_admin_user)
-
+       
         # non admin user
         response = self.detail_view(request, pk=another_user.pk)
         self.assertFalse(non_admin_user.is_staff)  # this user is not staff
-        self.assertNotEqual(response.status_code,
-                            200)  # this user should not be able to access another user's detail page
-
+        self.assertNotEqual(response.status_code, 200)  # this user should not be able to access another user's detail page
+    
         response = self.list_view(request)
         self.assertNotEqual(response.status_code, 200)  # non-admin user should not be able to access the list
 
@@ -166,9 +162,10 @@ class UserAPIViewTest(TestCase):
         force_authenticate(request, user=admin_user)
         response = self.detail_view(request, pk=another_user.pk)
         self.assertTrue(admin_user.is_staff)  # this user is staff
-        self.assertEqual(response.status_code,
-                         200)  # since this user is staff, should be able to access another's detail page
+        self.assertEqual(response.status_code,200)  # since this user is staff, should be able to access another's detail page
 
+        request = APIRequestFactory().get("")
+        force_authenticate(request,user = admin_user)
         response = self.list_view(request)  # admin user should be able to access list view, and not a regular user
         self.assertEqual(response.status_code, 200)
 
@@ -196,7 +193,7 @@ class UserAPIViewTest(TestCase):
 #testing for Author project
 class AuthorProjectTests(TestCase):
     def setUp(self):
-        self.view = BookViewSet.as_view({'get':'list','get':'retrieve','post':'create', 'patch':'update'})
+        self.view = BookViewSet.as_view({'get':'list','get':'retrieve','post':'create', 'patch':'partial_update'})
         self.detail_view = BookViewSet.as_view({'get':'retrieve'})
         self.the_user = UserFactory()
         self.the_user.is_staff = False #a regular user, not admin
@@ -208,8 +205,6 @@ class AuthorProjectTests(TestCase):
         return {"title":book.title,
                 "pen_name":book.pen_name,
                 "publisher": book.publisher.pk,
-               # "uploader":book.uploader.pk,
-              #  "author":book.author.pk,
                 "users_who_favorite": [],
                 "type":"upload"
                 }
@@ -294,8 +289,10 @@ class AuthorProjectTests(TestCase):
         
         request = APIRequestFactory().patch("",{"isVerified":True})
         force_authenticate(request, user = self.the_admin_user)
-        response = self.view(request, pk = book.pk)
+        response = self.view(request, pk=book.pk)
+        book.refresh_from_db()
         self.assertTrue(book.isVerified) #admin user should be able to patch isVerified to True
+        #self.assertEqual(response,"bob")
         
         book = BookFactory() #by default, isPublic() is false
         request = APIRequestFactory().patch("",{"isVerified":True})
@@ -303,6 +300,7 @@ class AuthorProjectTests(TestCase):
         book.uploader.uploaded_books.add(book)
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk = book.pk)
+        book.refresh_from_db()
         self.assertFalse(book.isVerified)  #the book's uploader should not be able to patch isVerified to True
         
     
@@ -312,6 +310,7 @@ class AuthorProjectTests(TestCase):
         request = APIRequestFactory().patch("",{"isPublished":True})
         force_authenticate(request, user = self.the_admin_user)
         response = self.view(request, pk = book.pk)
+        book.refresh_from_db()
         self.assertTrue(book.isPublished) #admin user should be able to patch isPublished to True
         
         
@@ -321,6 +320,7 @@ class AuthorProjectTests(TestCase):
         book.uploader.uploaded_books.add(book)
         force_authenticate(request, user = book.uploader)
         response = self.view(request, pk = book.pk)
+        book.refresh_from_db()
         self.assertTrue(book.isPublished) #the book's uploader should be able to patch isPublished to True        
 
     def test_object_modify_permissions(self):
@@ -348,8 +348,8 @@ class AuthorProjectTests(TestCase):
 class SerializerTests(TestCase):
     #test custom logic in the serializers
     def setUp(self):
-        self.book_keys = ['id','title','pen_name','date','publisher','author','text','uploader','users_who_favorite','tags'] #all of the keys expected to be serialized
-        self.book_keys_write_only = ['isPublished','isVerified']
+        self.book_keys = ['id','title','pen_name','date','publisher','author','uploader','users_who_favorite','tags'] #all of the keys expected to be serialized
+        self.book_keys_write_only = ['isPublished','isVerified','text']
         
     def test_book_serializer_fields(self):
         test_book = BookFactory()

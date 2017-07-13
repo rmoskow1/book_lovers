@@ -11,21 +11,18 @@ class PublisherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BookSerializer(serializers.ModelSerializer):  # we'll be converting something to JSON based on the model
 
-    owner = models.ForeignKey('auth.User', related_name='owned_books', on_delete=models.CASCADE)
-    # author = AuthorSerializer(many=True, read_only=False)
-    users_who_favorite = serializers.StringRelatedField(read_only=True, many=True)
-    tags = serializers.StringRelatedField(read_only=True, many=True)
-
+class BookSerializer(serializers.ModelSerializer):
+    '''Book serializer for a non admin user'''
+    users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
+    tags = serializers.StringRelatedField(read_only = True, many = True)
     class Meta:
         model = Book
-        fields = ('id', 'title', 'pen_name', 'date', 'publisher', 'text', 'uploader',
-                  'author', 'users_who_favorite', 'tags', 'isPublished')
+        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isPublished')
+        read_only_fields = ('uploader','author')  #cannot be changed by user, set during creation in BookViewSet
         extra_kwargs = {
-            # 'isVerified':{'write_only':True},
-            'isPublished': {'write_only': True}
-         }
+            'isPublished':{'write_only':True}
+        }
 
 
 class BookAdminSerializer(BookSerializer):
@@ -33,6 +30,9 @@ class BookAdminSerializer(BookSerializer):
 
     class Meta(BookSerializer.Meta):
         fields = BookSerializer.Meta.fields + ('isVerified',)
+        extra_kwargs = {
+            'isPublished':{'write_only':False}
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,6 +50,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password']) 
         user.save()
         return user
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 
 class ProfileSerializer(serializers.ModelSerializer):

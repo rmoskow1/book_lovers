@@ -6,9 +6,9 @@ class Book(models.Model):
 
     title = models.CharField(max_length=100)
 
-    pen_name = models.CharField(max_length=100, verbose_name='author name', default='Bartholomew the Jew')
+    pen_name = models.CharField(max_length=100, verbose_name='author name', default = 'Insert Pen Name')
 
-    publisher = models.ForeignKey('Publisher', null=True)  # allows for unknown publisher
+    publisher = models.ForeignKey('Publisher', null=True,blank = True)  # allows for unknown publisher
 
     date = models.DateField(blank=True, null=True)  # allows for unknown publishing date
 

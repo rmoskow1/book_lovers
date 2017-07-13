@@ -17,7 +17,7 @@ from django.db.models import Q
 
 #from .forms import BookCreateForm, BookUpdateForm
 class BooksActionMixin(object):
-    fields = ['title', 'author', 'publisher', 'date', 'tags']
+    fields = ['title', 'pen_name', 'publisher', 'date', 'tags','uploader','isVerified','isPublished']
 
     @property
     def success_msg(self):
@@ -36,30 +36,18 @@ class BookSearchMixin(object):
         q = self.request.GET.get('q')
         if q:
 # return a filtered queryset
-            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(author__name__icontains = q)|Q(publisher__name__icontains = q)).distinct()
+            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(pen_name__icontains = q)|Q(publisher__name__icontains = q)|Q(uploader__name__icontains)).distinct()
 # No q is specified so we return queryset
         return queryset
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
-
-    # success_msg = "Book created!"
-    # template_name_suffix = '_update_form'
-    #
-    # def get_success_url(self):
-    #     return redirect('books:list')
     login_url = 'account:login'
 
 
     def get_success_url(self):
         return reverse('books:list')
 
-    # def get_context_data(self, *args, **kwargs):
-    #
-    #     import ipdb
-    #     ipdb.set_trace()
-    #     temp = super().get_context_data(*args, **kwargs)
-    #     return temp
 
 class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     model = Book
@@ -76,29 +64,11 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
 class BooksDetailView(DetailView, UpdateView):
     model = Book
     fields = ['users_who_favorite']
-   # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
-   # status = "Favorite" if model in self.request.User.fav_books.all() else "Unfavorite"
-
-   #  def get_context_data(self, request):
-   #          # Call the base implementation first to get a context
-   #          context = super(self).get_context_data()
-   #          # Add in a QuerySet of all the books
-   #          context['status'] = "Favorite" if model not in request.User.fav_books.all() else "Unfavorite"
-   #          return context
-
-
     template_name_suffix = '_detail'
 
     def get_success_url(self):
         return reverse('books:list')
-
-    # def favorite_request(request):
-    #         if request.method == 'GET':
-    #             if object in request.user.fav_books.all():
-    #                 request.user.fav_books.add(request.user)
-    #             else:
-    #                 request.user.fav_books.remove(request.user)
-
+    
     def get_context_data(self, **kwargs):
 
         context = super(BooksDetailView, self).get_context_data(**kwargs)
@@ -113,18 +83,22 @@ class BooksDetailView(DetailView, UpdateView):
 
 
 class BooksListView(BookSearchMixin,ListView):
-    model = Book
+    '''list of all public books in database'''
+    
     context_object_name = 'Book'
+    def get_queryset(self):
+        return Book.objects.filter(isVerified = True)
 
 
 
 class FavoritesListView(BooksListView):
+    '''list of a user's favorite books'''
     def get_queryset(self):
         queryset = super(FavoritesListView, self).get_queryset()
         if self.request.user.is_authenticated():
         # return a filtered queryset
             return self.request.user.fav_books.all()
-# No q is specified so we return queryset
+        # No q is specified so we return queryset
         return queryset
 
 

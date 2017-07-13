@@ -53,20 +53,20 @@ class BookViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return Book.objects.all()
         else:
-            return Book.objects.filter(Q(isVerified=True, isPublished=True) | Q(uploader=self.request.user)
-                                       | Q(author=self.request.user) | Q(publisher=self.request.user.profile.publisher))
-
-    def get_serializer_class(self):
-        # if the user is admin, use the BookAdminSerializer. For any other user, the base serializer
-        if self.request.user.is_staff:
-            return BookAdminSerializer
-        else:
-            return BookSerializer
+            return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
+   
 
     queryset = Book.objects.get_queryset()
     
     filter_fields = ('isPublished', 'isVerified')
     permission_classes = (BookViewPermission,)
+
+    def get_serializer_class(self):
+        '''if the user is admin, use the BookAdminSerializer. For any other user, the base serializer'''
+        if self.request.user.is_staff:
+            return BookAdminSerializer
+        else: #non-admin user
+            return BookSerializer
 
     def perform_create(self, serializer):
         data = self.request.data

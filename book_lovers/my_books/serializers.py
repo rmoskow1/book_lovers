@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from .models import Book,Publisher,Tag,Profile
+from .models import Book, Publisher, Tag, Profile
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-from django.db import models
 
 
 class PublisherSerializer(serializers.ModelSerializer):
@@ -11,17 +9,18 @@ class PublisherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class BookSerializer(serializers.ModelSerializer):
-    '''Book serializer for a non admin user'''
-    users_who_favorite =  serializers.StringRelatedField(read_only = True,many = True)
-    tags = serializers.StringRelatedField(read_only = True, many = True)
+    # Book serializer for a non admin user
+    users_who_favorite = serializers.StringRelatedField(read_only=True, many=True)
+    tags = serializers.StringRelatedField(read_only=True, many=True)
+
     class Meta:
         model = Book
-        fields = ('id','title','pen_name','date','publisher','text','uploader','author','users_who_favorite','tags','isPublished')
-        read_only_fields = ('uploader','author')  #cannot be changed by user, set during creation in BookViewSet
+        fields = ('id', 'title', 'pen_name', 'date', 'publisher', 'text', 'uploader',
+                  'author', 'users_who_favorite', 'tags', 'isPublished')
+        read_only_fields = ('uploader', 'author')  # cannot be changed by user, set during creation in BookViewSet
         extra_kwargs = {
-            'isPublished':{'write_only':True}
+            'isPublished': {'write_only': True}
         }
 
 
@@ -31,7 +30,7 @@ class BookAdminSerializer(BookSerializer):
     class Meta(BookSerializer.Meta):
         fields = BookSerializer.Meta.fields + ('isVerified',)
         extra_kwargs = {
-            'isPublished':{'write_only':False}
+            'isPublished': {'write_only': False}
         }
 
 

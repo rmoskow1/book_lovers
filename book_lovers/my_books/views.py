@@ -1,49 +1,41 @@
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, DeleteView
 from django.urls import reverse
-from django.contrib.auth import logout, login
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
-
-#from book_lovers.forms import CreateForm
-
-from django.conf import settings
-from django.contrib.auth.models import User
 from .models import Book
 from django.db.models import Q
 
 
-
-#from .forms import BookCreateForm, BookUpdateForm
 class BooksActionMixin(object):
-    fields = ['title', 'pen_name', 'publisher', 'date', 'tags','uploader','isVerified','isPublished']
+    fields = ['title', 'pen_name', 'publisher', 'date', 'tags', 'uploader', 'isVerified', 'isPublished']
 
     @property
     def success_msg(self):
         return NotImplemented
 
-
     def form_valid(self, form):
         messages.info(self.request, self.success_msg)
         return super(BooksActionMixin, self).form_valid(form)
-    
+
+
 class BookSearchMixin(object):
     def get_queryset(self):
-# Fetch the queryset from the parent's get_queryset
+        # Fetch the queryset from the parent's get_queryset
         queryset = super(BookSearchMixin, self).get_queryset()
-# Get the q GET parameter
+        # Get the q GET parameter
         q = self.request.GET.get('q')
         if q:
-# return a filtered queryset
-            return queryset.filter(Q(title__icontains=q)|Q(tags__name__iexact = q)|Q(pen_name__icontains = q)|Q(publisher__name__icontains = q)|Q(uploader__name__icontains)).distinct()
-# No q is specified so we return queryset
+            # return a filtered queryset
+            return queryset.filter(Q(title__icontains=q) | Q(tags__name__iexact=q)
+                                   | Q(pen_name__icontains=q) | Q(publisher__name__icontains=q)
+                                   | Q(uploader__name__icontains=q)).distinct()
+        # No q is specified so we return queryset
         return queryset
+
 
 class BooksCreateView(LoginRequiredMixin, BooksActionMixin, CreateView):
     model = Book
     login_url = 'account:login'
-
 
     def get_success_url(self):
         return reverse('books:list')
@@ -57,8 +49,7 @@ class BooksUpdateView(LoginRequiredMixin, BooksActionMixin, UpdateView):
     login_url = 'account:login'
 
     def get_success_url(self):
-        return reverse('books:detail',kwargs={'pk':self.object.pk})
-
+        return reverse('books:detail', kwargs={'pk': self.object.pk})
 
 
 class BooksDetailView(DetailView, UpdateView):
@@ -80,23 +71,21 @@ class BooksDetailView(DetailView, UpdateView):
         return context
 
 
-
-
-class BooksListView(BookSearchMixin,ListView):
-    '''list of all public books in database'''
+class BooksListView(BookSearchMixin, ListView):
+    # list of all public books in database
     
     context_object_name = 'Book'
-    def get_queryset(self):
-        return Book.objects.filter(isVerified = True)
 
+    def get_queryset(self):
+        return Book.objects.filter(isVerified=True)
 
 
 class FavoritesListView(BooksListView):
-    '''list of a user's favorite books'''
+    # list of a user's favorite books
     def get_queryset(self):
         queryset = super(FavoritesListView, self).get_queryset()
         if self.request.user.is_authenticated():
-        # return a filtered queryset
+            # return a filtered queryset
             return self.request.user.fav_books.all()
         # No q is specified so we return queryset
         return queryset

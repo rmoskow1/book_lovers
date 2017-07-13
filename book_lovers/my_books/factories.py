@@ -1,10 +1,8 @@
 from .models import Book, Publisher, Profile
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 import factory
 import factory.fuzzy
 import datetime
-import random
 
 
 class PublisherFactory(factory.DjangoModelFactory):

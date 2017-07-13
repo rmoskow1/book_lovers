@@ -1,17 +1,8 @@
-from django.http import JsonResponse
 from rest_framework import viewsets, generics, permissions
 from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer,  BookAdminSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
 from .models import Book, Publisher, Profile
-from django.http import Http404
-import django_filters.rest_framework
-
-from django.http import JsonResponse
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from django.db.models import Q
 
 
@@ -53,8 +44,8 @@ class BookViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return Book.objects.all()
         else:
-            return Book.objects.filter(Q(isVerified=True,isPublished=True) | Q(uploader = self.request.user) | Q(author = self.request.user) | Q(publisher=self.request.user.profile.publisher))
-   
+            return Book.objects.filter(Q(isVerified=True, isPublished=True) | Q(uploader=self.request.user)
+                                       | Q(author=self.request.user) | Q(publisher=self.request.user.profile.publisher))
 
     queryset = Book.objects.get_queryset()
     
@@ -62,10 +53,10 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = (BookViewPermission,)
 
     def get_serializer_class(self):
-        '''if the user is admin, use the BookAdminSerializer. For any other user, the base serializer'''
+        # if the user is admin, use the BookAdminSerializer. For any other user, the base serializer
         if self.request.user.is_staff:
             return BookAdminSerializer
-        else: #non-admin user
+        else:  # non-admin user
             return BookSerializer
 
     def perform_create(self, serializer):
@@ -76,15 +67,6 @@ class BookViewSet(viewsets.ModelViewSet):
             serializer.save(author=self.request.user)
         else:
             serializer.save()
-
-    def patch(self, request):
-        data = request.data
-        testmodel = (data.get('id'))
-        serializer = BookSerializer(data=request.data, partial=True)  # set partial=True to update a data partially
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(code=202, data=serializer.data)
-        return JsonResponse(code=400, data="wrong parameters")  
 
 
 # display only the books with at least 2 users who favorite

@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class MyBooksConfig(AppConfig):
-    name = 'my_books'
+    name = 'book_lovers.my_books'

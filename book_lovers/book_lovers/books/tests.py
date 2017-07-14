@@ -7,6 +7,7 @@ from .factories import BookFactory
 from my_books.factories import UserFactory
 
 
+
 # book search needs to test: 1.empty queryset 2.returning all values with the search in the author name
 # 3.values with the search in the title 4.values with the exact search being the tag name
 # 5. when a book is an answer for more than one category, it shouldn't appear twice
@@ -126,4 +127,3 @@ class FavoritesListViewTest2(TestCase):  # 1 is Pinchas's, 2 is Racheli's
         for book in expected_books:
             self.assertIn(book, actual_books)
         self.assertEqual(len(actual_books), len(expected_books))
-

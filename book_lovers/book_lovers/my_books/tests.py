@@ -21,19 +21,19 @@ class BookSearchMixinTest(TestCase):
     """based on dnmellen - tests mixin within a fake template"""
     class DummyView(BookSearchMixin, ListView):
         model = Book
-         
+
         template_name = "best_darn_template_eva.html" #needed to be defined for any TemplateView
-        
+
 
     def setUp(self):
         super(BookSearchMixinTest,self).setUp()
         self.View = self.DummyView()
-    
+
     def assert_ListQuery(self,list,querySet): #simple helper method for checking a list and queryset are equal
         for i in list:
             self.assertIn(i,querySet) #every book in the list is in the queryset
         self.assertEqual(len(list),len(querySet)) #the 2 contain the same number of elements
-     
+
     def test_PubSearch(self):
         '''test if search successfully finds all books with publisher names containing the search query'''
         #make some books with specific publisher names
@@ -47,7 +47,7 @@ class BookSearchMixinTest(TestCase):
         expected_books = [book1,book4]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books,actual_books)
-    #for some reason (yet unknown), if publisher isn't specified here, it's randomly generated name will change search query results. This is logical - the illogical part is that this problem doesn't exist 
+    #for some reason (yet unknown), if publisher isn't specified here, it's randomly generated name will change search query results. This is logical - the illogical part is that this problem doesn't exist
     def test_AuthorSearch(self):
         '''test if the search successfully finds all books with author names containing the search query'''
         #make some books, titles can be random but author names are specific
@@ -62,17 +62,17 @@ class BookSearchMixinTest(TestCase):
         expected_books = [book1,book2,book4]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books, actual_books)
-        
+
     def test_TitleSearch(self):
         #test - the resulting queryset should just be the view's queryset properly filtered
         book1 = BookFactory.create(title = "Best Book")
-        book2 = BookFactory.create(title = "Worst Book") 
+        book2 = BookFactory.create(title = "Worst Book")
         request= RequestFactory().get("/fake/path", {'q':"Best"})
         self.View.request = request
         expected_books = [book1]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books,actual_books)
-    
+
     def tes_CaseIns(self):
         '''test for case insensitivity when searching'''
         book1 = BookFactory.create(title = "Best book")
@@ -90,9 +90,9 @@ class BookSearchMixinTest(TestCase):
         expected_books = [book1,book2,book3]
         actual_books = self.View.get_queryset()
         self.assert_ListQuery(expected_books, actual_books)
-     
+
     def test_multiples(self):
-        bookList = BookFactory.create_batch(size = 15) #create a random collection of books with fuzzy titles, author names, publisher names, etc. 
+        bookList = BookFactory.create_batch(size = 15) #create a random collection of books with fuzzy titles, author names, publisher names, etc.
         request = RequestFactory().get("fake/path",{'q':'e'})
         self.View.request = request
         actual_books = self.View.get_queryset()
@@ -102,22 +102,22 @@ class BookSearchMixinTest(TestCase):
                 countList.append(book)
             else: #if book IS in countList
                 self.assertFalse(True) #the query was not distinct!
-        
 
 
-        
-        
-   
+
+
+
+
 
 # BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here
 # BookListView uses only built-in ListView functionality - doesn't need to be tested here
 
 class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
     '''tests that the FavoritesListView correctly displays a list of the user's favorite books (the user who made the request)'''
-   
+
     def setup(self):
         super(FavoritesListViewTest2,self).setUp()
-        
+
     def test_listing(self):
         request = RequestFactory().get("fake/path")
         # book1 = BookFactory()

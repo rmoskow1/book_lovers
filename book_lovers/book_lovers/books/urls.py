@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 
 from book_lovers.books import views
@@ -12,5 +12,4 @@ urlpatterns = [
     url(r'^favorites/$', views.FavoritesListView.as_view(), name='favorites'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='registration/login.html')),
     url(r'^logout/$', auth_views.logout, {"next_page": 'books:list'}, name='logout'),
-
 ]

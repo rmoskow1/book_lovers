@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from book_lovers.tags.models import Tag
+
 
 class Book(models.Model):
 
@@ -14,7 +16,7 @@ class Book(models.Model):
     users_who_favorite = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='fav_books')
     isPublished = models.BooleanField(default=False)
     isVerified = models.BooleanField(default=False)
-    tags = models.ManyToManyField('Tag', related_name='tagged_books', blank=True)
+    tags = models.ManyToManyField(Tag, related_name='tagged_books', blank=True)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='uploaded_books')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='authored_books')
 

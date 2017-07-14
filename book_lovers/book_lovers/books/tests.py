@@ -1,14 +1,8 @@
-from django.test import TestCase, mock
 from django.views.generic import ListView
-from books.views import BookSearchMixin
-from django.test import TestCase, RequestFactory
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.db.models import Q
-from books.models import Book
-from books.views import FavoritesListView
-import datetime, unittest
+from book_lovers.books.models import Book
+from book_lovers.books import BookSearchMixin
 from .factories import BookFactory
+
 
 # book search needs to test: 1.empty queryset 2.returning all values with the search in the author name
 # 3.values with the search in the title 4.values with the exact search being the tag name

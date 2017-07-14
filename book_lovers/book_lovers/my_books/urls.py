@@ -1,7 +1,7 @@
-from my_books import views
-from django.contrib.auth import views as auth_views
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
+from book_lovers.my_books import views
 
 urlpatterns = [
     url(r'^$', views.BooksListView.as_view(), name='list'),

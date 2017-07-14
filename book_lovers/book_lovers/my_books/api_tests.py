@@ -1,13 +1,14 @@
 from __future__ import unicode_literals
-from .api_views import BookViewPermission, BookViewSet, UserViewSet
-from my_books.models import Profile, Book, Publisher
-from django.contrib.auth.models import User, AnonymousUser
-from django.test import TestCase, mock
-from .serializers import UserSerializer, BookSerializer
+
 import unittest
+
 from django.contrib.auth.hashers import is_password_usable, check_password
+from django.contrib.auth.models import User
+from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
+from .api_views import BookViewPermission, BookViewSet, UserViewSet
 from .factories import UserFactory, BookFactory
+from .serializers import UserSerializer
 
 
 @unittest.skipIf(False, "From before Author model removal")

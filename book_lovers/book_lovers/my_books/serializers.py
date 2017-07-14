@@ -28,10 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = '__all__'
+
 
 
 class ProfileSerializer(serializers.ModelSerializer):

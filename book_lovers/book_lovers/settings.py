@@ -31,7 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'my_books.apps.MyBooksConfig',
+    'book_lovers.my_books.apps.MyBooksConfig',
+    'book_lovers.tags.apps.TagsConfig'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,7 +68,7 @@ ROOT_URLCONF = 'book_lovers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'book_lovers/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

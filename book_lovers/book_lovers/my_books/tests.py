@@ -1,16 +1,13 @@
 
-from django.test import TestCase, mock
-from django.views.generic import ListView
-from my_books.views import BookSearchMixin, FavoritesListView
-from django.test import TestCase, RequestFactory
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.db.models import Q
-from my_books.models import Book, Publisher, Author
+from django.test import TestCase, RequestFactory
+from django.test import mock
+from django.views.generic import ListView
+from my_books.views import BookSearchMixin
 from my_books.views import FavoritesListView
-import datetime, unittest
+
+from book_lovers.my_books.models import Book, Author
 from .factories import UserFactory, BookFactory, AuthorFactory
-import factory.fuzzy
 
 
 class FavoriteListViewTest(TestCase, FavoritesListView):

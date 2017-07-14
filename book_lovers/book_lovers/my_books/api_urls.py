@@ -7,7 +7,7 @@ from book_lovers.my_books import api_views
 schema_view = get_swagger_view(title='Pastebin API')
 
 router = routers.DefaultRouter()
-router.register(r'books', api_views.BookViewSet) 
+router.register(r'^', api_views.BookViewSet)
 router.register(r'popularbooks', api_views.PopularBookViewSet)
 router.register(r'publishers', api_views.PublisherViewSet)
 router.register(r'users', api_views.UserViewSet)

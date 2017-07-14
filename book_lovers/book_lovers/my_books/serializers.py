@@ -1,14 +1,6 @@
 from rest_framework import serializers
-from .models import Book, Publisher, Tag, Profile
+from .models import Profile
 from django.contrib.auth.models import User
-
-
-
-
-
-
-
-
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,9 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password']) 
         user.save()
         return user
-
-
-
 
 
 class ProfileSerializer(serializers.ModelSerializer):

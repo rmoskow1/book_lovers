@@ -1,14 +1,11 @@
-from django.test import TestCase, mock
+
 from django.views.generic import ListView
-from books.views import BookSearchMixin
 from django.test import TestCase, RequestFactory
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.db.models import Q
-from books.models import Book
-from books.views import FavoritesListView
-import datetime, unittest
+from .models import Book
+from .views import BookSearchMixin, FavoritesListView
 from .factories import BookFactory
+from my_books.factories import UserFactory
+
 
 # book search needs to test: 1.empty queryset 2.returning all values with the search in the author name
 # 3.values with the search in the title 4.values with the exact search being the tag name
@@ -109,4 +106,24 @@ class BookSearchMixinTest(TestCase):
 # BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here
 # BookListView uses only built-in ListView functionality - doesn't need to be tested here
 
+
+class FavoritesListViewTest2(TestCase):  # 1 is Pinchas's, 2 is Racheli's
+    """tests that the FavoritesListView correctly displays a list of the user's favorite books """
+
+    def setup(self):
+        super(FavoritesListViewTest2, self).setUp()
+
+    def test_listing(self):
+        request = RequestFactory().get("fake/path")
+        # book1 = BookFactory()
+        # book2 = BookFactory()
+        request.user = UserFactory()  # create a user with user factory, and assign this to the request made
+        bob = request.user  # request from sruli...he thinks every user deserves a loving name
+        expected_books = bob.fav_books.all()
+        view = FavoritesListView()
+        view.request = request
+        actual_books = view.get_queryset()
+        for book in expected_books:
+            self.assertIn(book, actual_books)
+        self.assertEqual(len(actual_books), len(expected_books))
 

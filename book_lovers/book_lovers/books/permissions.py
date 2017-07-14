@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class BookViewPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         # allow user to list all users if logged in user is staff

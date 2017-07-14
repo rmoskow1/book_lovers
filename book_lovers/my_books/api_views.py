@@ -2,7 +2,7 @@ from rest_framework import viewsets, generics, permissions
 from .serializers import BookSerializer, PublisherSerializer, UserSerializer, ProfileSerializer,  BookAdminSerializer
 from django.db.models import Count
 from django.contrib.auth.models import User
-from .models import Book, Publisher, Profile
+from book_lovers.books.models import Book, Publisher
 from django.db.models import Q
 
 

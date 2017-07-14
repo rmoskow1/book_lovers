@@ -1,60 +1,21 @@
 
 from django.test import TestCase, mock
 from django.views.generic import ListView
-from my_books.views import BookSearchMixin, FavoritesListView
+from book_lovers.books.views import BookSearchMixin, FavoritesListView
 from django.test import TestCase, RequestFactory
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Q
-from my_books.models import Book, Publisher, Author
-from my_books.views import FavoritesListView
-import datetime, unittest
-from .factories import UserFactory, BookFactory, AuthorFactory
+from book_lovers.books.models import Book
+from .factories import UserFactory, BookFactory
 import factory.fuzzy
 
 
-class FavoriteListViewTest(TestCase, FavoritesListView):
-    def setUp(self):
+#booksearch needs to test: 1.empty queryset 2.returning all values with the search in the author name 3.values with the
+# search in the title 4.values with the exact search being the tag name 5. when a book is an answer for more than one
+# category, it shouldn't appear twice 6. test that it's "recursive", that the page itself is searchable in the remaining
+# content?
 
-        felix = Author.objects.create(name='Fix It Felix Jr.')
-        steve = Author.objects.create(name='Armless Steve')
-        AuthList = [felix, steve]
-        aa = Book.objects.create(title="Bob the Builder's Magical Mushrooms")
-        bb = Book.objects.create(title="Factory Mishaps and Other Ways to Lose a Limb")
-        aa.save()
-        bb.save()
-        aa.author.add(AuthList[0])
-        aa.author.add(AuthList[1])
-        bb.author.add(AuthList[1])
-
-        global myBooks
-        myBooks = [aa,bb]
-
-    @mock.patch('requests.get')
-    def test_favorite(self, mockget):
-        aa = Book.objects.get(title="Bob the Builder's Magical Mushrooms")
-        bb = Book.objects.get(title="Factory Mishaps and Other Ways to Lose a Limb")
-        aa.save()
-        bb.save()
-
-        user = User(id=1, username="a", password="b", email='c@d.efg')
-        user.save()
-
-        user.fav_books.add(aa)
-        myView = FavoritesListView()
-        myView.request = mockget.requests.get
-        myView.request.user = user
-
-        for book in myView.get_queryset():
-            self.assertIn(book, user.fav_books.all())
-        self.assertEqual(len(myView.get_queryset()), len(user.fav_books.all()))
-
-
-
-#booksearch needs to test: 1.empty queryset 2.returning all values with the search in the author name 3.values with the search in the title 4.values with the exact search being the tag name 5. when a book is an answer for more than one category, it shouldn't appear twice 6. test that it's "recursive", that the page itself is searchable in the remaining content?
-#@unittest.skipIf(True == True, "not interested")     
-
-        
 
 class BookSearchMixinTest(TestCase):
     """based on dnmellen - tests mixin within a fake template"""
@@ -148,8 +109,8 @@ class BookSearchMixinTest(TestCase):
         
    
 
-#BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here
-#BookListView uses only built-in ListView functionality - doesn't need to be tested here
+# BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here
+# BookListView uses only built-in ListView functionality - doesn't need to be tested here
 
 class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
     '''tests that the FavoritesListView correctly displays a list of the user's favorite books (the user who made the request)'''
@@ -159,10 +120,10 @@ class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
         
     def test_listing(self):
         request = RequestFactory().get("fake/path")
-        #book1 = BookFactory()
-        #book2 = BookFactory()
-        request.user = UserFactory() #create a user with user factory, and assign this to the request made
-        bob = request.user #request from sruli...he thinks every user deserves a loving name
+        # book1 = BookFactory()
+        # book2 = BookFactory()
+        request.user = UserFactory()  # create a user with user factory, and assign this to the request made
+        bob = request.user # request from sruli...he thinks every user deserves a loving name
         expected_books = bob.fav_books.all()
         view = FavoritesListView()
         view.request = request
@@ -170,7 +131,3 @@ class FavoritesListViewTest2(TestCase): #1 is Pinchas's, 2 is Racheli's
         for book in expected_books:
             self.assertIn(book, actual_books)
         self.assertEqual(len(actual_books),len(expected_books))
-    
-   
-
-        

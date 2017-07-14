@@ -1,11 +1,9 @@
-from rest_framework import viewsets, generics, permissions
-from .serializers import BookSerializer, PublisherSerializer, BookAdminSerializer
 from django.db.models import Count
-from django.contrib.auth.models import User
-from .models import Book, Publisher, Profile
 from django.db.models import Q
-
-
+from rest_framework import viewsets, permissions
+from book_lovers.books.permissions import BookViewPermission
+from book_lovers.books.models import Book, Publisher
+from .serializers import BookSerializer, PublisherSerializer, BookAdminSerializer
 
 
 class BookViewSet(viewsets.ModelViewSet):

@@ -1,17 +1,19 @@
 from __future__ import unicode_literals
-from .api_views import BookViewPermission, BookViewSet
+from .views import BookViewPermission, BookViewSet
 from book_lovers.books.models import Book
-from django.test import TestCase, mock
+from django.test import TestCase
 from .serializers import BookSerializer
 from rest_framework.test import APIRequestFactory, force_authenticate
 from book_lovers.books.factories import BookFactory
+from book_lovers.users.factories import UserFactory
 
 
-# testing for Author project
+# testing for author update - previous model, author, was removed from the database and replaced with pen_name, and 2
+# one-many relationships with User: uploader and author
 class AuthorProjectTests(TestCase):
     def setUp(self):
-        self.view = BookViewSet.as_view({'get': 'list', 'get': 'retrieve', 'post': 'create', 'patch': 'partial_update'})
-        self.detail_view = BookViewSet.as_view({'get': 'retrieve'})
+        self.view = BookViewSet.as_view(actions={'get': 'list', 'get': 'retrieve', 'post': 'create',
+                                                 'patch': 'partial_update'})
         self.the_user = UserFactory()
         self.the_user.is_staff = False  # a regular user, not admin
         self.the_admin_user = UserFactory()
@@ -90,7 +92,7 @@ class AuthorProjectTests(TestCase):
 
         request = APIRequestFactory().get("")
         force_authenticate(request, user=self.the_user)  # request with a regular - non admin user
-        response = self.detail_view(request, pk=book.pk)  # detail page of the not public book
+        response = self.view(request, pk=book.pk)  # detail page of the not public book
         self.assertEqual(response.status_code, 404)  # the user should not be able to access this not public book
 
         request = APIRequestFactory().get("")

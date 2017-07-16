@@ -1,6 +1,6 @@
 from django.db import models
-from django.conf import settings
 from book_lovers.books.models import Publisher
+from django.conf import settings
 
 
 class Profile(models.Model):

@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, DeleteView
 
-from book_lovers.books import Book
+from book_lovers.books.models import Book
 
 
 class BooksActionMixin(object):

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'book_lovers.books.apps.BooksConfig',
     'book_lovers.my_books.apps.MyBooksConfig',
     'book_lovers.tags.apps.TagsConfig',
+    'book_lovers.users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

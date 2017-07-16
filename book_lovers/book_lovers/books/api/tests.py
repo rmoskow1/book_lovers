@@ -10,7 +10,7 @@ from book_lovers.users.factories import UserFactory
 
 # testing for author update - previous model, author, was removed from the database and replaced with pen_name, and 2
 # one-many relationships with User: uploader and author
-class AuthorProjectTests(TestCase):
+class AuthorUploaderTests(TestCase):
     def setUp(self):
         self.view = BookViewSet.as_view(actions={'get': 'list', 'get': 'retrieve', 'post': 'create',
                                                  'patch': 'partial_update'})

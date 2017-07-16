@@ -24,6 +24,7 @@ class Book(models.Model):
         return self.title
 
     def is_public(self):
+        # method for determining whether book is publicly displayed - viewable for any user
         if self.isPublished and self.isVerified:
             return True
         return False

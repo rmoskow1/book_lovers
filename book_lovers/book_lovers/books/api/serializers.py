@@ -3,7 +3,6 @@ from rest_framework import serializers
 from book_lovers.books.models import Book, Publisher
 
 
-
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher

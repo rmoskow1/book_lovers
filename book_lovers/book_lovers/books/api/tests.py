@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
-from .views import BookViewPermission, BookViewSet
-from book_lovers.books.models import Book
+
 from django.test import TestCase
-from .serializers import BookSerializer
 from rest_framework.test import APIRequestFactory, force_authenticate
+
 from book_lovers.books.factories import BookFactory
+from book_lovers.books.models import Book
 from book_lovers.users.factories import UserFactory
+from .serializers import BookSerializer
+from .views import BookViewPermission, BookViewSet
 
 
 # testing for author update - previous model, author, was removed from the database and replaced with pen_name, and 2

@@ -1,11 +1,11 @@
 
-from django.views.generic import ListView
 from django.test import TestCase, RequestFactory
+from django.views.generic import ListView
+
+from book_lovers.books.factories import BookFactory
+from book_lovers.users.factories import UserFactory
 from .models import Book
 from .views import BookSearchMixin, FavoritesListView
-from .factories import BookFactory
-from my_books.factories import UserFactory
-
 
 
 # book search needs to test: 1.empty queryset 2.returning all values with the search in the author name

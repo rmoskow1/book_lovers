@@ -32,3 +32,5 @@ class BookAdminSerializer(BookSerializer):
         extra_kwargs = {
             'isPublished': {'write_only': False}
         }
+
+

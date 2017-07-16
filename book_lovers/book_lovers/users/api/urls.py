@@ -15,6 +15,3 @@ urlpatterns = [
     url(r'^docs/', schema_view),
 ]
 urlpatterns += router.urls
-
-
-

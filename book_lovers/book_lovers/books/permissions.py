@@ -7,30 +7,42 @@ class BookViewPermission(permissions.BasePermission):
         return request.user.is_authenticated()
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated():
 
-            if request.method in permissions.SAFE_METHODS:  # not creating/updating/deleting a book
-                # is book is public (isVerified and isPublished), or the user is admin, or the user is an uploader/
-                # author/publisher then the book can be viewed
-                if (obj.is_public()) \
-                        or request.user.is_staff \
-                        or ((request.user.profile.publisher == obj.publisher)
-                            or (obj in request.user.uploaded_books.all())
-                            or (obj in request.user.authored_books.all())):
-                    return True
-                else:
-                    return False
-            else:  # creating/updating/deleting a book
-                # a public book can ONLY be edited by admin
-                if obj.is_public():
-                    if request.user.is_staff:
-                        return True
+        # non-authenticated users can't view or modify data
+        if not request.user.is_authenticated():
+            return False
 
-                else:  # book is not public
-                    if request.user.is_staff \
-                            or ((request.user.profile.publisher == obj.publisher)
-                                or (obj in request.user.uploaded_books.all())
-                                or (obj in request.user.authored_books.all())):
-                        return True
+        # admins can always view and modify data
+        if request.user.is_staff:
+            return True
 
-        return False
+        # if user is authenticated but isn't an admin
+
+        # if the request is to view the data
+        if request.method in permissions.SAFE_METHODS:
+
+            # if it's public, the user can view it
+            if obj.is_public():
+                return True
+
+            # if it's not public, only the publisher, uploader, or author can view it
+            elif (request.user.profile.publisher == obj.publisher) or (obj in request.user.uploaded_books.all()) or (obj in request.user.authored_books.all()):
+                return True
+            else:
+                return False
+
+        # if the request is to modify the data
+        elif request.method not in permissions.SAFE_METHODS:
+
+            # if it's public, the user cannot modify it
+            if obj.is_public():
+                return False
+
+            # if it's not public, only the publisher, uploader, or author can modify it
+            elif (request.user.profile.publisher == obj.publisher) or (obj in request.user.uploaded_books.all()) or (obj in request.user.authored_books.all()):
+                return True
+            else:
+                return False
+
+
+

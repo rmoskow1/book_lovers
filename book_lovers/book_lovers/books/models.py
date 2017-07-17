@@ -1,10 +1,23 @@
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from book_lovers.tags.models import Tag
 
 
+
+
+class BookManager(models.Manager):
+    def for_user(self, user):
+        if user.is_staff:
+            return super(BookManager, self).get_queryset()
+        else:
+            return super(BookManager, self).get_queryset().filter(Q(isVerified=True) | Q(uploader=user)|Q(publisher=user.profile.publisher) | Q(author=user))
+
+
+
 class Book(models.Model):
 
+    objects = BookManager()
     title = models.CharField(max_length=100)
     pen_name = models.CharField(max_length=100, verbose_name='author name', default='Insert Pen Name')
     publisher = models.ForeignKey('Publisher', null=True, blank=True)  # allows for unknown publisher

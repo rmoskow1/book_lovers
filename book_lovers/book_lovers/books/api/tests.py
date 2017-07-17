@@ -171,7 +171,6 @@ class AuthorUploaderTests(TestCase):
         response = self.view(request3, pk=book.pk)
         self.assertTrue(BookViewPermission.has_object_permission(request3, request3, self.view, book))
 
-
 class SerializerTests(TestCase):
     # test custom logic in the book serializers
     def setUp(self):

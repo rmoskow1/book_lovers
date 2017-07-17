@@ -28,39 +28,39 @@ class BookSearchMixinTest(TestCase):
         super(BookSearchMixinTest, self).setUp()
         self.View = self.DummyView()
 
-    def assert_list_query(self, list, querySet):  # simple helper method for checking a list and queryset are equal
-        for i in list:
-            self.assertIn(i, querySet)  # every book in the list is in the queryset
-        self.assertEqual(len(list), len(querySet))  # the 2 contain the same number of elements
+    def assert_list_query(self, a_list, a_querySet):  # simple helper method for checking a list and queryset are equal
+        for i in a_list:
+            self.assertIn(i, a_querySet)  # every book in the list is in the queryset
+        self.assertEqual(len(a_list), len(a_querySet))  # the 2 contain the same number of elements
 
     def test_pub_search(self):
         """test if search successfully finds all books with publisher names containing the search query"""
         # make some books with specific publisher names
         book1 = BookFactory.create(title="book1", publisher__name="aaa")
-        book2 = BookFactory.create(title="book2", publisher__name="bbb")
-        book3 = BookFactory.create(title="book3", publisher__name="ccc")
+        book2 = BookFactory.create(title="book2", publisher__name="bbb", pen_name="bbb", uploader__username="bbb")
+        book3 = BookFactory.create(title="book3", publisher__name="ccc", pen_name="ccc", uploader__username="ccc")
         book4 = BookFactory.create(title="book4", publisher__name="abdc")
         # 'a' search - not in the book title
         request = RequestFactory().get("/fake", {"q": "a"})
         self.View.request = request
         expected_books = [book1, book4]
         actual_books = self.View.get_queryset()
-        self.assert_ListQuery(expected_books, actual_books)
+        self.assert_list_query(expected_books, actual_books)
 
     def test_author_search(self):
-        """test if the search successfully finds all books with author names containing the search query"""
+        """test if the search successfully finds all books with pen_names containing the search query"""
         # make some books, titles can be random but author names are specific
-        book1 = BookFactory.create(title="book1", publisher__name="pub", pen_name="bbb"),
-        book2 = BookFactory.create(title="book2", publisher__name="pub", pen_name="aaa"),
-        book3 = BookFactory.create(title="book3", publisher__name="pub", pen_name="ccc"),
-        book4 = BookFactory.create(title="book4", publisher__name="pub", pen_name="abc"),
-        book5 = BookFactory.create(title="book5", publisher__name="pub", pen_name="lll"),
-        # 'a' search - not in the book title
+        book1 = BookFactory.create(title="book1", publisher__name="pub", pen_name="bbb", uploader__username="bbb")
+        book2 = BookFactory.create(title="book2", publisher__name="pub", pen_name="aaa", uploader__username="ddd")
+        book3 = BookFactory.create(title="book3", publisher__name="pub", pen_name="ccc", uploader__username="fff")
+        book4 = BookFactory.create(title="book4", publisher__name="pub", pen_name="abc", uploader__username="ggg")
+        book5 = BookFactory.create(title="book5", publisher__name="pub", pen_name="lll", uploader__username="lll")
+        # 'a' search - not in the book title,publisher name or uploader name
         request = RequestFactory().get("/fake", {"q": "a"})
         self.View.request = request
-        expected_books = [book1, book2, book4]
-        actual_books = self.View.get_queryset() # extra books were created to populate db
-        self.assert_ListQuery(expected_books, actual_books)
+        expected_books = [book2, book4]
+        actual_books = self.View.get_queryset()  # extra books were created to populate db
+        self.assert_list_query(expected_books, actual_books)
 
     def test_title_search(self):
         # test - the resulting queryset should just be the view's queryset properly filtered
@@ -70,7 +70,7 @@ class BookSearchMixinTest(TestCase):
         self.View.request = request
         expected_books = [book1]
         actual_books = self.View.get_queryset()
-        self.assert_ListQuery(expected_books, actual_books)
+        self.assert_list_query(expected_books, actual_books)
 
     def test_case_ins(self):
         """test for case insensitivity when searching"""
@@ -82,7 +82,7 @@ class BookSearchMixinTest(TestCase):
         self.View.request = request
         expected_books = [book1, book2, book3]
         actual_books = self.View.get_queryset()
-        self.assert_ListQuery(expected_books, actual_books)
+        self.assert_list_query(expected_books, actual_books)
         # even with different cases in the title, all the books will be found
 
         # now testing that a query with different cases will return the same queryset
@@ -90,7 +90,7 @@ class BookSearchMixinTest(TestCase):
         self.View.request = request2
         expected_books = [book1, book2, book3]
         actual_books = self.View.get_queryset()
-        self.assert_ListQuery(expected_books, actual_books)
+        self.assert_list_query(expected_books, actual_books)
 
     def test_multiples(self):
         book_list = BookFactory.create_batch(
@@ -104,6 +104,20 @@ class BookSearchMixinTest(TestCase):
                 count_list.append(book)
             else:  # if book IS in countList
                 self.assertFalse(True)  # the query was not distinct
+
+    def test_manager(self):
+        book1 = BookFactory(title='book1')
+        book2 = BookFactory(title='book2')
+        user1 = UserFactory()
+        user1.is_staff=True
+        user2 = UserFactory()
+        # book1.uploader = user2
+        user2.uploaded_books.add(book1)
+        request = RequestFactory()
+        request.user = user1
+        print(Book.objects.for_user(user1))
+        request.user = user2
+        print(Book.objects.for_user(user2))
 
 
 # BookDeleteView uses only built-in DeleteView functionality - doesn't need to be tested here

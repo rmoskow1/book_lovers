@@ -28,7 +28,7 @@ class BookSearchMixin(object):
             # return a filtered queryset
             return queryset.filter(Q(title__icontains=q) | Q(tags__name__iexact=q)
                                    | Q(pen_name__icontains=q) | Q(publisher__name__icontains=q)
-                                   | Q(uploader__name__icontains=q)).distinct()
+                                   | Q(uploader__username__icontains=q)).distinct()
         # No q is specified so we return queryset
         return queryset
 

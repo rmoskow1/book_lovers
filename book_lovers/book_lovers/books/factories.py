@@ -1,6 +1,4 @@
 from book_lovers.books.models import Book, Publisher
-from book_lovers.users.models import Profile
-
 import factory
 import factory.fuzzy
 import datetime

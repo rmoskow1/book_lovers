@@ -1,15 +1,9 @@
-from django.views.generic import ListView
 from django.test import TestCase, RequestFactory
 from django.views.generic import ListView
-
-from book_lovers.books.factories import BookFactory
-from book_lovers.users.factories import UserFactory
 from .models import Book
 from .views import BookSearchMixin, FavoritesListView
 from .factories import BookFactory
 from book_lovers.users.factories import UserFactory
-
-
 
 # book search needs to test: 1.empty queryset 2.returning all values with the search in the author name
 # 3.values with the search in the title 4.values with the exact search being the tag name
@@ -105,7 +99,8 @@ class BookSearchMixinTest(TestCase):
             else:  # if book IS in countList
                 self.assertFalse(True)  # the query was not distinct
 
-    def test_manager(self):
+    def test_book_manager(self):
+        """Book manager's for_user should return a queryset of books available to a given user"""
         book1 = BookFactory(title='book1')
         book2 = BookFactory(title='book2')
         user1 = UserFactory()

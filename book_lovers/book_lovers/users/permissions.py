@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 # a permission designed for UserViewSet -- only staff can see a list of all users.
-# And only staff or the user itself can view a user detail page
+# And only staff or the user itself can view a user's detail page
 class IsStaffOrTargetUser(permissions.BasePermission):
     def has_permission(self, request, view):
         # allow user to list all users if logged in user is staff

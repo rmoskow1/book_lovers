@@ -1,4 +1,3 @@
-
 from rest_framework import routers
 from book_lovers.users.api import views
 

@@ -4,15 +4,13 @@ from django.conf import settings
 from book_lovers.tags.models import Tag
 
 
-
-
 class BookManager(models.Manager):
     def for_user(self, user):
         if user.is_staff:
             return super(BookManager, self).get_queryset()
         else:
-            return super(BookManager, self).get_queryset().filter(Q(isVerified=True) | Q(uploader=user)|Q(publisher=user.profile.publisher) | Q(author=user))
-
+            return super(BookManager, self).get_queryset().filter(Q(isVerified=True) | Q(uploader=user) |
+                                                                  Q(publisher=user.profile.publisher) | Q(author=user))
 
 
 class Book(models.Model):

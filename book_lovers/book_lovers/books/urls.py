@@ -1,6 +1,5 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-
 from book_lovers.books import views
 
 urlpatterns = [

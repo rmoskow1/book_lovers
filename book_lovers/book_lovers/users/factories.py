@@ -1,9 +1,7 @@
 import factory
 import factory.fuzzy
 from django.contrib.auth.models import User
-# from book_lovers.books \
 from book_lovers.books.factories import PublisherFactory
-# import book_lovers.books.factories #.books.factories.PublisherFactory
 from .models import Profile
 
 

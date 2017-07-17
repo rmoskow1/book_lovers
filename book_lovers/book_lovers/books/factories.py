@@ -34,7 +34,7 @@ class BookFactory(factory.DjangoModelFactory):
     publisher = factory.SubFactory(PublisherFactory)  # one to many
     date = factory.fuzzy.FuzzyDate(datetime.date(2008, 1, 1))
     pen_name = factory.fuzzy.FuzzyText()
-    # uploader = factory.SubFactory(user_factories.factories.UserFactory)
+    uploader = factory.SubFactory("book_lovers.users.factories.UserFactory")
     author = factory.SubFactory("book_lovers.users.factories.UserFactory")
     isPublished = False
     isVerified = False  # default creation of a book has isPublished and isVerified both as false
